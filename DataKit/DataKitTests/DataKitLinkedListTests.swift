@@ -207,6 +207,19 @@ struct DataKitLinkedListTests {
 		#expect(await ll.isEmpty() == false)
 	}
 	
+	@Test("searchBy returns nil when a node cannot be found")
+	func search_nil() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 28)
+		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 12)
+		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 2)
+		await ll.add(newHead)
+		await ll.add(newNode0)
+		await ll.add(newNode1)
+		
+		#expect(await ll.searchBy(MyCustomType.makeItem("Key2", 285)) == nil)
+	}
+	
 	@Test("searchBy successfully finds the first node and return a its value and index in the list")
 	func searchBy() async throws {
 		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()

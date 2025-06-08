@@ -19,10 +19,14 @@ public final class Node<T: DataKitCompatible> {
 	}
 }
 
+public enum DataKitError: Error, Equatable {
+	case emptyStructure(String)
+}
+
 public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 	private var head: Node<T>?
 	
-	public func push(_ value: T) async {
+	public func add(_ value: T) async {
 		if head == nil {
 			head = Node<T>(value: value)
 		} else {
@@ -32,6 +36,11 @@ public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 			}
 			current?.next = Node<T>(value: value)
 		}
+	}
+	
+	public func delete(_ value: T) async throws {
+		if head == nil { throw DataKitError.emptyStructure("Cannot delete from an empty list") }
+		
 	}
 	
 	public func getSize() async -> Int {
@@ -49,12 +58,22 @@ public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 struct DataKitLinkedListTests {
 	
 	@Test("Add new element to the DataKitActorLinkedList")
-	func push_add_new_node() async throws {
+	func add() async throws {
 		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
 		let newNode: MyCustomType = MyCustomType.makeItem("Key1", 14)
-		await ll.push(newNode)
+		await ll.add(newNode)
 		let size = await ll.getSize()
 		#expect(size == 1)
+	}
+	
+	@Test("Delete throws an exception when trying to delete from an empty list")
+	func delete_throws() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newNode: MyCustomType = MyCustomType.makeItem("Key1", 14)
+		let expectedErrorMessage: String = "Cannot delete from an empty list"
+		await #expect(throws: DataKitError.emptyStructure(expectedErrorMessage), performing: {
+			try await ll.delete(newNode)
+		})
 	}
 	
 	// MARK: - Helpers

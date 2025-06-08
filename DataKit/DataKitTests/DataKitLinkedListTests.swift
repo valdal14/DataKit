@@ -101,6 +101,13 @@ struct DataKitLinkedListTests {
 		#expect(size == 1)
 	}
 	
+	@Test("dump return 'Empty List' when the list is empty")
+	func bump_empty() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let expectedString: String = "Empty List"
+		#expect(await ll.dump() == expectedString)
+	}
+	
 	@Test("deleteFirstBy throws an exception when trying to delete from an empty list")
 	func deleteFirstBy_throws() async throws {
 		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()

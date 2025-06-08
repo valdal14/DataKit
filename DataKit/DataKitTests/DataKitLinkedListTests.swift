@@ -28,7 +28,7 @@ public enum DataKitError: Error, Equatable {
 	case nodeNotFound(String)
 }
 
-public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
+public actor DataKitActorLinkedList<T: DataKitCompatible> {
 	private var head: Node<T>?
 	private var listSize: Int = 0
 	
@@ -90,6 +90,27 @@ public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 	
 	public func isEmpty() -> Bool {
 		return getSize() == 0
+	}
+	
+	public func searchBy(_ value: T) -> (T, Int)? {
+		var index = -1
+		
+		if head == nil {
+			return nil
+		}
+		
+		var current = head
+		
+		while let node = current {
+			index += 1
+			if node.value == value {
+				return (node: node.value, index: index)
+			} else {
+				current = current?.next
+			}
+		}
+		
+		return nil
 	}
 }
 
@@ -184,6 +205,28 @@ struct DataKitLinkedListTests {
 		let newHead: MyCustomType = MyCustomType.makeItem("Key1", 28)
 		await ll.add(newHead)
 		#expect(await ll.isEmpty() == false)
+	}
+	
+	@Test("searchBy successfully finds the first node and return a its value and index in the list")
+	func searchBy() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 28)
+		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 12)
+		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 2)
+		let newNode2: MyCustomType = MyCustomType.makeItem("Key2", 14)
+		let newNode3: MyCustomType = MyCustomType.makeItem("Key3", 2)
+		await ll.add(newHead)
+		await ll.add(newNode0)
+		await ll.add(newNode1)
+		await ll.add(newNode2)
+		await ll.add(newNode3)
+		
+		if let element = await ll.searchBy(newNode1) {
+			#expect(element.0.value == 2)
+			#expect(element.1 == 2)
+		} else {
+			assertionFailure("Could not find the node")
+		}
 	}
 	
 	// MARK: - Helpers

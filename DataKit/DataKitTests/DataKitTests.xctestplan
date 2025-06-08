@@ -1,0 +1,33 @@
+{
+  "configurations" : [
+    {
+      "id" : "9D1063BD-19C8-4D6E-BE8D-7A8738EBBB4C",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:DataKit.xcodeproj",
+          "identifier" : "01621A402DF423A900B40F25",
+          "name" : "DataKitTests"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:DataKit.xcodeproj",
+        "identifier" : "01621A402DF423A900B40F25",
+        "name" : "DataKitTests"
+      }
+    }
+  ],
+  "version" : 1
+}

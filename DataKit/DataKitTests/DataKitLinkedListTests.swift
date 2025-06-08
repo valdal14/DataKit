@@ -89,7 +89,7 @@ public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 	}
 	
 	public func isEmpty() -> Bool {
-		return listSize == 0
+		return getSize() == 0
 	}
 }
 
@@ -176,6 +176,14 @@ struct DataKitLinkedListTests {
 	func isEmpty() async throws {
 		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
 		#expect(await ll.isEmpty())
+	}
+	
+	@Test("isEmpty returns false if the list is not empty")
+	func isEmpty_false() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Key1", 28)
+		await ll.add(newHead)
+		#expect(await ll.isEmpty() == false)
 	}
 	
 	// MARK: - Helpers

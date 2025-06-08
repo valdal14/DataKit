@@ -112,6 +112,27 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 		
 		return nil
 	}
+	
+	public func searchAllBy(_ value: T) -> [(T, Int)] {
+		var output: [(T, Int)] = []
+		
+		if head == nil {
+			return output
+		}
+		
+		var current = head
+		var index = 0
+		
+		while let node = current {
+			if node.value == value {
+				output.append((node.value, index))
+			}
+			current = node.next
+			index += 1
+		}
+		
+		return output
+	}
 }
 
 struct DataKitLinkedListTests {
@@ -240,6 +261,25 @@ struct DataKitLinkedListTests {
 		} else {
 			assertionFailure("Could not find the node")
 		}
+	}
+	
+	@Test("searchAllBy returns a list of values and index associated with the found nodes")
+	func searchAllBy() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 28)
+		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 12)
+		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 2)
+		let newNode2: MyCustomType = MyCustomType.makeItem("Key2", 14)
+		await ll.add(newHead)
+		await ll.add(newNode0)
+		await ll.add(newNode1)
+		await ll.add(newNode2)
+		await ll.add(newNode1)
+		
+		let foundElements = await ll.searchAllBy(newNode1)
+		#expect(foundElements.count == 2)
+		let strList = await ll.dump()
+		print(strList)
 	}
 	
 	// MARK: - Helpers

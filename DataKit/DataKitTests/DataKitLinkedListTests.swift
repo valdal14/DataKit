@@ -30,6 +30,7 @@ public enum DataKitError: Error, Equatable {
 
 public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 	private var head: Node<T>?
+	private var listSize: Int = 0
 	
 	public func add(_ value: T) {
 		if head == nil {
@@ -41,6 +42,8 @@ public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 			}
 			current?.next = Node<T>(value: value)
 		}
+		
+		listSize += 1
 	}
 	
 	public func deleteFirstBy(_ value: T) throws {
@@ -48,6 +51,7 @@ public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 		
 		if head?.value == value {
 			head = head?.next
+			listSize -= 1
 			return
 		}
 		
@@ -57,20 +61,11 @@ public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 		while let c = current {
 			if c.value == value {
 				previous?.next = current?.next
+				listSize -= 1
 			}
 			previous = current
 			current = current?.next
 		}
-	}
-	
-	public func getSize() -> Int {
-		var current = head
-		var count = 0
-		while let _ = current {
-			count += 1
-			current = current?.next
-		}
-		return count
 	}
 	
 	public func dump() -> String {
@@ -87,6 +82,10 @@ public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 		}
 		
 		return output.map(\.self).description
+	}
+	
+	public func getSize() -> Int {
+		return listSize
 	}
 }
 

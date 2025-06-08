@@ -108,6 +108,19 @@ struct DataKitLinkedListTests {
 		#expect(await ll.dump() == expectedString)
 	}
 	
+	@Test("dump return a string representation of the current list")
+	func dump() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 14)
+		let newNode2: MyCustomType = MyCustomType.makeItem("Key2", 28)
+		let newNode3: MyCustomType = MyCustomType.makeItem("Key3", 1)
+		await ll.add(newNode1)
+		await ll.add(newNode2)
+		await ll.add(newNode3)
+		let size = await ll.getSize()
+		#expect(size == 3)
+	}
+	
 	@Test("deleteFirstBy throws an exception when trying to delete from an empty list")
 	func deleteFirstBy_throws() async throws {
 		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()

@@ -144,6 +144,30 @@ struct DataKitLinkedListTests {
 		#expect(size == 1)
 	}
 	
+	@Test("getSize successfully returns the correct size of the list")
+	func getSize() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 1)
+		let newNode2: MyCustomType = MyCustomType.makeItem("Key1", 14)
+		await ll.add(newNode1)
+		await ll.add(newNode2)
+		var size = await ll.getSize()
+		#expect(size == 2)
+		try await ll.deleteFirstBy(newNode1)
+		size = await ll.getSize()
+		#expect(size == 1)
+		try await ll.deleteFirstBy(newNode2)
+		size = await ll.getSize()
+		#expect(size == 0)
+		let newHead: MyCustomType = MyCustomType.makeItem("Key1", 28)
+		await ll.add(newHead)
+		size = await ll.getSize()
+		#expect(size == 1)
+		try await ll.deleteFirstBy(newHead)
+		size = await ll.getSize()
+		#expect(size == 0)
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> DataKitActorLinkedList<MyCustomType> {
 		return .init()

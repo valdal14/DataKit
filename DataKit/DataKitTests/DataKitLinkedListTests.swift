@@ -117,6 +117,8 @@ struct DataKitLinkedListTests {
 		await ll.add(newNode1)
 		await ll.add(newNode2)
 		await ll.add(newNode3)
+		let strList = await ll.dump()
+		#expect(strList != "Empty List")
 		let size = await ll.getSize()
 		#expect(size == 3)
 	}

@@ -31,6 +31,13 @@ struct DataKitStackTests {
 		#expect(isStackEmpty == false)
     }
 	
+	@Test("isEmpty successfully returns true if the stack is empty")
+	func push_returns_true() async throws {
+		let sut = makeSUT()
+		let isStackEmpty = await sut.isEmpty()
+		#expect(isStackEmpty)
+	}
+	
 	// MARK: - Helper methods
 	private func makeSUT() -> DataKitActorStack<User> {
 		return .init()

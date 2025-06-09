@@ -36,7 +36,10 @@ public actor DataKitQueue<T: DataKitCompatible>: Sendable {
 		return try await data.peek()
 	}
 	
-	
+	/// Searches for the first occurrence of the specified element in the queue.
+	///
+	/// - Parameter element: The element to search for.
+	/// - Returns: A tuple containing the element and its index if found, or `nil` if the element is not present.
 	public func search(_ element: T) async -> (T, Int)? {
 		return await data.search(element)
 	}
@@ -116,6 +119,17 @@ struct DataKitQueueTests {
 			#expect(value.1 == 0)
 		} else {
 			assertionFailure("Expected an element but got nil")
+		}
+	}
+	
+	@Test("search return nil if the element is not present in the queue")
+	func search_Returns_Nil() async throws {
+		let sut = makeSUT()
+		await sut.enqueue(1)
+		await sut.enqueue(2)
+		
+		if let value = await sut.search(3) {
+			assertionFailure("Expected an element but got \(value)")
 		}
 	}
 	

@@ -38,6 +38,10 @@ public actor DataKitActorStack<T: DataKitCompatible>: Sendable {
 	public func searchAll(_ element: T) async -> [(T, Int)?] {
 		return await data.searchAllBy(element)
 	}
+	
+	public func update(_ currentElement: T, newElement: T, configuration: UpdateType) async throws {
+		try await data.update(currentElement, newElement: newElement, configuration: configuration)
+	}
 }
 
 struct DataKitStackTests {
@@ -127,6 +131,22 @@ struct DataKitStackTests {
 		
 		let elements = await sut.searchAll(newUser1)
 		#expect(elements.count == 2)
+	}
+	
+	@Test("update successfully update the first element found")
+	func update_first() async throws {
+		let sut = makeSUT()
+		let newUser1 = User(id: UUID(), name: "John", surname: "Doe", age: 30)
+		let newUser2 = User(id: UUID(), name: "Valerio", surname: "Dal", age: 40)
+		let newUser3 = User(id: newUser2.id, name: "Valerio", surname: "Dal", age: 40)
+		await sut.push(newUser1)
+		await sut.push(newUser2)
+		await sut.push(newUser3)
+		
+		try await sut.update(newUser2, newElement: .init(id: .init(), name: "Grazia", surname: "Dal", age: 6), configuration: .one)
+		
+		let foundUser = await sut.searchAll(newUser2)
+		#expect(foundUser.count == 1)
 	}
 	
 	// MARK: - Helper methods

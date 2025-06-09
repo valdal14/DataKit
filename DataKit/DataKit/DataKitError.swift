@@ -8,5 +8,5 @@
 import Foundation
 
 public enum DataKitError: Error, Equatable {
-	case emptyStructure(String)
+	case emptyStructure
 }

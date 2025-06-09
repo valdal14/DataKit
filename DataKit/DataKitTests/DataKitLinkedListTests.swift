@@ -41,24 +41,23 @@ struct DataKitLinkedListTests {
 		#expect(size == 3)
 	}
 	
-	@Test("deleteFirstBy throws an exception when trying to delete from an empty list")
-	func deleteFirstBy_throws() async throws {
+	@Test("delete throws an exception when trying to delete from an empty list")
+	func delete_throws() async throws {
 		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
 		let newNode: MyCustomType = MyCustomType.makeItem("Key1", 14)
-		let expectedErrorMessage: String = "Cannot delete from an empty list"
-		await #expect(throws: DataKitError.emptyStructure(expectedErrorMessage), performing: {
-			try await ll.deleteFirstBy(newNode)
-		})
+		await #expect(throws: DataKitError.emptyStructure, performing: ({
+			try await ll.delete(newNode)
+		}))
 	}
 	
-	@Test("deleteFirstBy successfully remove the first node from the list with a given value")
+	@Test("delete successfully remove the first node from the list with a given value")
 	func delete() async throws {
 		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
 		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 14)
 		let newNode2: MyCustomType = MyCustomType.makeItem("Key1", 14)
 		await ll.add(newNode1)
 		await ll.add(newNode2)
-		try await ll.deleteFirstBy(newNode1)
+		try await ll.delete(newNode1)
 		let size = await ll.getSize()
 		#expect(size == 1)
 	}
@@ -72,17 +71,17 @@ struct DataKitLinkedListTests {
 		await ll.add(newNode2)
 		var size = await ll.getSize()
 		#expect(size == 2)
-		try await ll.deleteFirstBy(newNode1)
+		try await ll.delete(newNode1)
 		size = await ll.getSize()
 		#expect(size == 1)
-		try await ll.deleteFirstBy(newNode2)
+		try await ll.delete(newNode2)
 		size = await ll.getSize()
 		#expect(size == 0)
 		let newHead: MyCustomType = MyCustomType.makeItem("Key1", 28)
 		await ll.add(newHead)
 		size = await ll.getSize()
 		#expect(size == 1)
-		try await ll.deleteFirstBy(newHead)
+		try await ll.delete(newHead)
 		size = await ll.getSize()
 		#expect(size == 0)
 	}
@@ -158,37 +157,57 @@ struct DataKitLinkedListTests {
 	func updateBy_Throws_On_Empty_List() async throws {
 		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
-		await #expect(throws: DataKitError.emptyStructure("Cannot update an empty list"), performing: ({
+		await #expect(throws: DataKitError.emptyStructure, performing: ({
 			try await ll.update(newHead, value: .makeItem(newHead.keyName, 14))
 		}))
 	}
 	
-	@Test("updateBy updates the head node with a new value")
-	func updateBy_head() async throws {
+	@Test("update updates the head node with a new value")
+	func update_head() async throws {
 		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
 		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
+		let newNode1: MyCustomType = MyCustomType.makeItem("Key0", 13)
 		await ll.add(newHead)
 		await ll.add(newNode0)
+		await ll.add(newNode1)
 		
 		let expectedNewHeadValue: Int = 14
 		let expectedNewHead: MyCustomType = MyCustomType.makeItem(newHead.keyName, expectedNewHeadValue)
 		try await ll.update(newHead, value: .makeItem(newHead.keyName, expectedNewHeadValue))
 		
-		if let element = await ll.searchBy(expectedNewHead) {
-			#expect(element.0.value == expectedNewHeadValue)
-		} else {
-			assertionFailure("Could not find the node")
-		}
+		let elements = await ll.searchAllBy(expectedNewHead)
+		#expect(elements.count == 1)
 	}
 	
-	@Test("updateBy updates the node with a new value")
-	func updateBy_node() async throws {
+	@Test("update updates all node occurrences a new value")
+	func update_nodes() async throws {
 		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
 		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
 		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 11)
-		let newNode2: MyCustomType = MyCustomType.makeItem("Key2", 1)
+		let newNode2: MyCustomType = MyCustomType.makeItem("Key1", 11)
+		await ll.add(newHead)
+		await ll.add(newNode0)
+		await ll.add(newNode1)
+		await ll.add(newNode2)
+		
+		let expectedNewValue: Int = 99
+		let expectedNewNode: MyCustomType = MyCustomType.makeItem(newNode1.keyName, expectedNewValue)
+		
+		try await ll.update(newNode1, value: .makeItem(newNode1.keyName, expectedNewValue), configuration: .all)
+		
+		let elements = await ll.searchAllBy(expectedNewNode)
+		#expect(elements.count == 2)
+	}
+	
+	@Test("update updates only the first occurrence of the node with a new value")
+	func update_node() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
+		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
+		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 11)
+		let newNode2: MyCustomType = MyCustomType.makeItem("Key1", 11)
 		await ll.add(newHead)
 		await ll.add(newNode0)
 		await ll.add(newNode1)
@@ -199,12 +218,8 @@ struct DataKitLinkedListTests {
 		
 		try await ll.update(newNode1, value: .makeItem(newNode1.keyName, expectedNewValue))
 		
-		if let element = await ll.searchBy(expectedNewNode) {
-			#expect(element.0.value == expectedNewValue)
-			#expect(element.1 == 2)
-		} else {
-			assertionFailure("Could not find the node")
-		}
+		let elements = await ll.searchAllBy(expectedNewNode)
+		#expect(elements.count == 1)
 	}
 	
 	// MARK: - Helpers

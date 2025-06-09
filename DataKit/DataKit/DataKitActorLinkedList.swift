@@ -7,13 +7,16 @@
 
 import Foundation
 
+public enum UpdateType: Sendable {
+	case one
+	case all
+}
+
 public actor DataKitActorLinkedList<T: DataKitCompatible> {
 	private var head: Node<T>?
 	private var listSize: Int = 0
 	
-	public init(head: Node<T>? = nil) {
-		self.head = head
-	}
+	public init() {}
 	
 	public func add(_ value: T) {
 		if head == nil {
@@ -29,8 +32,8 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 		listSize += 1
 	}
 	
-	public func deleteFirstBy(_ value: T) throws {
-		if head == nil { throw DataKitError.emptyStructure("Cannot delete from an empty list") }
+	public func delete(_ value: T) throws {
+		if head == nil { throw DataKitError.emptyStructure }
 		
 		if head?.value == value {
 			head = head?.next
@@ -45,6 +48,7 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 			if c.value == value {
 				previous?.next = current?.next
 				listSize -= 1
+				break
 			}
 			previous = current
 			current = current?.next
@@ -52,9 +56,7 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 	}
 	
 	public func dump() -> String {
-		if head == nil {
-			return "Empty List"
-		}
+		if head == nil { return "Empty List" }
 		
 		var output: [T] = []
 		var current = head
@@ -64,7 +66,7 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 			current = node.next
 		}
 		
-		return output.map(\.self).description
+		return output.description
 	}
 	
 	public func getSize() -> Int {
@@ -76,12 +78,9 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 	}
 	
 	public func searchBy(_ value: T) -> (T, Int)? {
+		if head == nil { return nil }
+		
 		var index = -1
-		
-		if head == nil {
-			return nil
-		}
-		
 		var current = head
 		
 		while let node = current {
@@ -99,9 +98,7 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 	public func searchAllBy(_ value: T) -> [(T, Int)] {
 		var output: [(T, Int)] = []
 		
-		if head == nil {
-			return output
-		}
+		if head == nil { return output }
 		
 		var current = head
 		var index = 0
@@ -117,17 +114,20 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 		return output
 	}
 	
-	public func update(_ element: T, value: T) throws  {
-		if head == nil { throw DataKitError.emptyStructure("Cannot update an empty list") }
+	public func update(_ element: T, value: T, configuration: UpdateType = .one) throws  {
+		if head == nil { throw DataKitError.emptyStructure }
+		
 		if head?.value == element {
 			head?.value = value
 			return
 		}
 		
 		var current = head
+		
 		while let node = current {
 			if node.value == element {
 				node.value = value
+				if configuration == .one { break }
 			}
 			current = node.next
 		}

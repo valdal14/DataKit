@@ -7,11 +7,6 @@
 
 import Foundation
 
-public enum DataKitError: Error, Equatable {
-	case emptyStructure(String)
-	case nodeNotFound(String)
-}
-
 public actor DataKitActorLinkedList<T: DataKitCompatible> {
 	private var head: Node<T>?
 	private var listSize: Int = 0

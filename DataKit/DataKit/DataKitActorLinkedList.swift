@@ -11,8 +11,11 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 	private var head: Node<T>?
 	private var listSize: Int = 0
 	
+	/// Initialises an empty linked list.
 	public init() {}
 	
+	/// Adds a new value to the end of the linked list.
+	/// - Parameter value: The value to be added to the list.
 	public func add(_ value: T) {
 		if head == nil {
 			head = Node<T>(value: value)
@@ -27,6 +30,9 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 		listSize += 1
 	}
 	
+	/// Deletes the first occurrence of a value from the linked list.
+	/// - Parameter value: The value to be deleted.
+	/// - Throws: `DataKitError.emptyStructure` if the list is empty.
 	public func delete(_ value: T) throws {
 		if head == nil { throw DataKitError.emptyStructure }
 		
@@ -50,28 +56,21 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 		}
 	}
 	
-	public func dump() -> String {
-		if head == nil { return "Empty List" }
-		
-		var output: [T] = []
-		var current = head
-		
-		while let node = current {
-			output.append(node.value)
-			current = node.next
-		}
-		
-		return output.description
-	}
-	
+	/// Returns the number of elements in the linked list.
+	/// - Returns: The total number of elements.
 	public func getSize() -> Int {
 		return listSize
 	}
 	
+	/// Checks whether the linked list is empty.
+	/// - Returns: `true` if the list has no elements, `false` otherwise.
 	public func isEmpty() -> Bool {
 		return getSize() == 0
 	}
 	
+	/// Searches for the first occurrence of a value in the list.
+	/// - Parameter value: The value to search for.
+	/// - Returns: A tuple containing the value and its index if found, or `nil` otherwise.
 	public func search(_ value: T) -> (T, Int)? {
 		if head == nil { return nil }
 		
@@ -89,6 +88,9 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 		return nil
 	}
 	
+	// Searches for all occurrences of a value in the list.
+	/// - Parameter value: The value to search for.
+	/// - Returns: An array of tuples containing the value and its index for each match found.
 	public func searchAllBy(_ value: T) -> [(T, Int)] {
 		var output: [(T, Int)] = []
 		
@@ -108,6 +110,12 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 		return output
 	}
 	
+	/// Updates one or more occurrences of a value in the list.
+	/// - Parameters:
+	///   - element: The element to find and update.
+	///   - value: The new value to assign.
+	///   - configuration: Whether to update only the first match (`.one`) or all matches (`.all`). Default is `.one`.
+	/// - Throws: `DataKitError.emptyStructure` if the list is empty.
 	public func update(_ element: T, value: T, configuration: UpdateType = .one) throws  {
 		if head == nil { throw DataKitError.emptyStructure }
 		
@@ -125,5 +133,21 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 			}
 			current = node.next
 		}
+	}
+	
+	/// Returns a string representation of all values in the list.
+	/// - Returns: A string listing all values in order, or `"Empty List"` if the list is empty.
+	public func dump() -> String {
+		if head == nil { return "Empty List" }
+		
+		var output: [T] = []
+		var current = head
+		
+		while let node = current {
+			output.append(node.value)
+			current = node.next
+		}
+		
+		return output.description
 	}
 }

@@ -26,6 +26,10 @@ public actor DataKitActorStack<T: DataKitCompatible>: Sendable {
 	public func peek(_ value: T) async -> (T, Int)? {
 		return await data.search(value)
 	}
+	
+	public func printStack()  async -> String {
+		await data.dump()
+	}
 }
 
 struct DataKitStackTests {
@@ -46,14 +50,14 @@ struct DataKitStackTests {
 		#expect(isStackEmpty)
 	}
 	
-	@Test("getSize return 0 when the stack is empty")
+	@Test("getSize returns 0 when the stack is empty")
 	func getSize_returns_zero() async throws {
 		let sut = makeSUT()
 		let size = await sut.getSize()
 		#expect(size == 0)
 	}
 	
-	@Test("getSize return the size of the stack when the stack is not empty")
+	@Test("getSize returns the size of the stack when the stack is not empty")
 	func getSize() async throws {
 		let sut = makeSUT()
 		let newUser = User(id: UUID(), name: "John", surname: "Doe", age: 30)
@@ -62,7 +66,7 @@ struct DataKitStackTests {
 		#expect(size == 1)
 	}
 	
-	@Test("peek return nil when the element is not present in the stack")
+	@Test("peek returns nil when the element is not present in the stack")
 	func peek_returns_nil() async throws {
 		let sut = makeSUT()
 		let newUser = User(id: UUID(), name: "John", surname: "Doe", age: 30)
@@ -70,6 +74,21 @@ struct DataKitStackTests {
 			assertionFailure("Expected nil but found an element")
 		} else {
 			#expect(await sut.isEmpty())
+		}
+	}
+	
+	@Test("peek returns element when the it is present in the stack")
+	func peek() async throws {
+		let sut = makeSUT()
+		let newUser = User(id: UUID(), name: "John", surname: "Doe", age: 30)
+		await sut.push(newUser)
+		
+		if let user = await sut.peek(newUser) {
+			#expect(user.0.name == "John")
+			#expect(user.0.surname == "Doe")
+			#expect(user.0.age == 30)
+		} else {
+			assertionFailure("Expected element but was not found")
 		}
 	}
 	

@@ -7,7 +7,8 @@
 
 import Foundation
 
-public actor DataKitActorLinkedList<T: DataKitCompatible> {
+/// An actor-based LinkedList implementation.
+public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 	private var head: Node<T>?
 	private var listSize: Int = 0
 	
@@ -113,10 +114,10 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 	/// Updates one or more occurrences of a value in the list.
 	/// - Parameters:
 	///   - currentElement: The element to find and update.
-	///   - newElement: The new value to assign.
+	///   - with: The new value to assign.
 	///   - configuration: Whether to update only the first match (`.one`) or all matches (`.all`). Default is `.one`.
 	/// - Throws: `DataKitError.emptyStructure` if the list is empty.
-	public func update(_ currentElement: T, newElement: T, configuration: UpdateType = .one) throws  {
+	public func update(_ currentElement: T, with newElement: T, configuration: UpdateType = .one) throws  {
 		if head == nil { throw DataKitError.emptyStructure }
 		
 		if head?.value == currentElement {
@@ -193,5 +194,24 @@ public extension DataKitActorLinkedList {
 			throw DataKitError.emptyStructure
 		}
 		return currentHead.value
+	}
+}
+
+// MARK: - Add support for Queue implementation
+public extension DataKitActorLinkedList {
+	
+	/// Adds an element to the end of the list, mimicking queue enqueue behavior.
+	///
+	/// - Parameter value: The value to be enqueued.
+	func enqueue(_ value: T) {
+		add(value)
+	}
+	
+	/// Removes and returns the element at the front of the list, mimicking queue dequeue behavior.
+	///
+	/// - Returns: The dequeued element.
+	/// - Throws: `DataKitError.emptyStructure` if the list is empty.
+	func dequeue() throws -> T {
+		return try pop()
 	}
 }

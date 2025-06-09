@@ -46,7 +46,7 @@ public actor DataKitActorStack<T: DataKitCompatible>: Sendable {
 	/// Returns a string representation of the stack contents.
 	///
 	/// - Returns: A string describing the elements in the stack.
-	public func printStack() async -> String {
+	public func dumpStack() async -> String {
 		await data.dump()
 	}
 
@@ -70,10 +70,10 @@ public actor DataKitActorStack<T: DataKitCompatible>: Sendable {
 	///
 	/// - Parameters:
 	///   - currentElement: The existing element to update.
-	///   - newElement: The new element to replace it with.
+	///   - with: The new element to replace it with.
 	///   - configuration: Specifies whether to update one or all occurrences.
 	/// - Throws: `DataKitError.emptyStructure` if the stack is empty.
-	public func update(_ currentElement: T, newElement: T, configuration: UpdateType) async throws {
-		try await data.update(currentElement, newElement: newElement, configuration: configuration)
+	public func update(_ currentElement: T, with newElement: T, configuration: UpdateType) async throws {
+		try await data.update(currentElement, with: newElement, configuration: configuration)
 	}
 }

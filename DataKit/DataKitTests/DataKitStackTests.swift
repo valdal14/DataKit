@@ -107,7 +107,7 @@ struct DataKitStackTests {
 		await sut.push(newUser2)
 		await sut.push(newUser3)
 		
-		try await sut.update(newUser2, newElement: .init(id: .init(), name: "Grazia", surname: "Dal", age: 6), configuration: .one)
+		try await sut.update(newUser2, with: .init(id: .init(), name: "Grazia", surname: "Dal", age: 6), configuration: .one)
 		
 		let foundUser = await sut.searchAll(newUser2)
 		#expect(foundUser.count == 1)
@@ -125,7 +125,7 @@ struct DataKitStackTests {
 		
 		let newUser = User(id: newUser2.id, name: "Grazia", surname: "Dal", age: 6)
 		
-		try await sut.update(newUser2, newElement: newUser, configuration: .all)
+		try await sut.update(newUser2, with: newUser, configuration: .all)
 		
 		let foundUser = await sut.searchAll(newUser)
 		#expect(foundUser.count == 2)

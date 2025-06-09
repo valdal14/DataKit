@@ -113,10 +113,10 @@ public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 	/// Updates one or more occurrences of a value in the list.
 	/// - Parameters:
 	///   - currentElement: The element to find and update.
-	///   - newElement: The new value to assign.
+	///   - with: The new value to assign.
 	///   - configuration: Whether to update only the first match (`.one`) or all matches (`.all`). Default is `.one`.
 	/// - Throws: `DataKitError.emptyStructure` if the list is empty.
-	public func update(_ currentElement: T, newElement: T, configuration: UpdateType = .one) throws  {
+	public func update(_ currentElement: T, with newElement: T, configuration: UpdateType = .one) throws  {
 		if head == nil { throw DataKitError.emptyStructure }
 		
 		if head?.value == currentElement {

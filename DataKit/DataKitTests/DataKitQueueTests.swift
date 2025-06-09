@@ -52,6 +52,17 @@ public actor DataKitQueue<T: DataKitCompatible>: Sendable {
 		return await data.searchAllBy(element)
 	}
 	
+	/// Updates one or more occurrences of an element in the queue.
+	///
+	/// - Parameters:
+	///   - currentElement: The existing element to update.
+	///   - with: The new element to replace it with.
+	///   - configuration: Specifies whether to update one or all occurrences.
+	/// - Throws: `DataKitError.emptyStructure` if the queue is empty.
+	public func update(_ currentElement: T, with newElement: T, configuration: UpdateType) async throws {
+		try await data.update(currentElement, with: newElement, configuration: configuration)
+	}
+	
 	/// Checks whether the stack is queue.
 	///
 	/// - Returns: `true` if the stack is empty, otherwise `false`.
@@ -163,6 +174,16 @@ struct DataKitQueueTests {
 		
 		let values = await sut.searchAll(14)
 		#expect(values.count == 0)
+	}
+	
+	@Test("update the first found element in the queue")
+	func update() async throws {
+		let sut = makeSUT()
+		await sut.enqueue(1)
+		
+		try await sut.update(1, with: 14, configuration: .one)
+		let updatedElement = try await sut.getFront()
+		#expect(updatedElement == 14)
 	}
 	
 	// MARK: - Helpers

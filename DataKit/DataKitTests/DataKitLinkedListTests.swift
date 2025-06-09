@@ -222,7 +222,15 @@ struct DataKitLinkedListTests {
 		#expect(elements.count == 1)
 	}
 	
-	// MARK: - Tests for stack implementation
+	// MARK: - Helpers
+	private func makeSUT() -> DataKitActorLinkedList<MyCustomType> {
+		return .init()
+	}
+}
+
+// MARK: - DataKitLinkedListTests extension for testing the stack implementation methods
+extension DataKitLinkedListTests {
+	
 	@Test("stack operations work correctly")
 	func stackOperations() async throws {
 		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
@@ -288,11 +296,6 @@ struct DataKitLinkedListTests {
 		let size = await ll.getSize()
 		#expect(popHead.value == 14)
 		#expect(size == 4)
-	}
-	
-	// MARK: - Helpers
-	private func makeSUT() -> DataKitActorLinkedList<MyCustomType> {
-		return .init()
 	}
 }
 

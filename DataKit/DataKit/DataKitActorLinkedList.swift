@@ -169,10 +169,9 @@ public extension DataKitActorLinkedList {
 	
 	func pop() throws -> T {
 		if let currentHead = head {
-			let poppedNode = Node<T>(value: currentHead.value)
 			head = currentHead.next
 			listSize -= 1
-			return poppedNode.value
+			return currentHead.value
 		} else {
 			throw DataKitError.emptyStructure
 		}

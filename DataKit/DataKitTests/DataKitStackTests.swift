@@ -34,6 +34,10 @@ public actor DataKitActorStack<T: DataKitCompatible>: Sendable {
 	public func search(_ element: T) async -> (T, Int)? {
 		return await data.search(element)
 	}
+	
+	public func searchAll(_ element: T) async -> [(T, Int)?] {
+		return await data.searchAllBy(element)
+	}
 }
 
 struct DataKitStackTests {
@@ -109,6 +113,20 @@ struct DataKitStackTests {
 		} else {
 			assertionFailure("Expected user but got nil")
 		}
+	}
+	
+	@Test("searchAll returns all elements found with the same value")
+	func searchAll() async throws {
+		let sut = makeSUT()
+		let newUser1 = User(id: UUID(), name: "John", surname: "Doe", age: 30)
+		let newUser2 = User(id: UUID(), name: "Valerio", surname: "Dal", age: 40)
+		let newUser3 = User(id: newUser1.id, name: "John", surname: "Doe", age: 30)
+		await sut.push(newUser1)
+		await sut.push(newUser2)
+		await sut.push(newUser3)
+		
+		let elements = await sut.searchAll(newUser1)
+		#expect(elements.count == 2)
 	}
 	
 	// MARK: - Helper methods

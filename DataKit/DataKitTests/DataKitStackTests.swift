@@ -22,6 +22,10 @@ public actor DataKitActorStack<T: DataKitCompatible>: Sendable {
 	public func getSize() async -> Int {
 		return await data.getSize()
 	}
+	
+	public func peek(_ value: T) async -> (T, Int)? {
+		return await data.search(value)
+	}
 }
 
 struct DataKitStackTests {
@@ -56,6 +60,17 @@ struct DataKitStackTests {
 		await sut.push(newUser)
 		let size = await sut.getSize()
 		#expect(size == 1)
+	}
+	
+	@Test("peek return nil when the element is not present in the stack")
+	func peek_returns_nil() async throws {
+		let sut = makeSUT()
+		let newUser = User(id: UUID(), name: "John", surname: "Doe", age: 30)
+		if let _ = await sut.peek(newUser) {
+			assertionFailure("Expected nil but found an element")
+		} else {
+			#expect(await sut.isEmpty())
+		}
 	}
 	
 	// MARK: - Helper methods

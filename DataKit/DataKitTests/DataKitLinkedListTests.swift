@@ -133,6 +133,12 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 		
 		return output
 	}
+	
+	public func updateBy(_ value: T) throws  {
+		if head == nil { throw DataKitError.emptyStructure("Cannot update an empty list") }
+		
+		
+	}
 }
 
 struct DataKitLinkedListTests {
@@ -280,6 +286,16 @@ struct DataKitLinkedListTests {
 		#expect(foundElements.count == 2)
 		let strList = await ll.dump()
 		print(strList)
+	}
+	
+	
+	@Test("updateBy throws when the list is empty")
+	func updateBy_Throws_On_Empty_List() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
+		await #expect(throws: DataKitError.emptyStructure("Cannot update an empty list"), performing: ({
+			try await ll.updateBy(newHead)
+		}))
 	}
 	
 	// MARK: - Helpers

@@ -134,10 +134,12 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 		return output
 	}
 	
-	public func updateBy(_ value: T) throws  {
+	public func update(_ element: T, value: T) throws  {
 		if head == nil { throw DataKitError.emptyStructure("Cannot update an empty list") }
-		
-		
+		if head?.value == element {
+			head?.value = value
+			return
+		}
 	}
 }
 
@@ -294,8 +296,28 @@ struct DataKitLinkedListTests {
 		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
 		await #expect(throws: DataKitError.emptyStructure("Cannot update an empty list"), performing: ({
-			try await ll.updateBy(newHead)
+			try await ll.update(newHead, value: .makeItem(newHead.keyName, 14))
 		}))
+	}
+	
+	@Test("updateBy updates the head node with a new value")
+	func updateBy_head() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
+		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
+		await ll.add(newHead)
+		await ll.add(newNode0)
+		
+		let expectedNewHeadValue: Int = 14
+		let expectedNewHead: MyCustomType = MyCustomType.makeItem(newHead.keyName, expectedNewHeadValue)
+		try await ll.update(newHead, value: .makeItem(newHead.keyName, expectedNewHeadValue))
+		
+		if let element = await ll.searchBy(expectedNewHead) {
+			#expect(element.0.value == expectedNewHeadValue)
+		} else {
+			assertionFailure("Could not find the node")
+		}
+		
 	}
 	
 	// MARK: - Helpers

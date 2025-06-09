@@ -44,6 +44,14 @@ public actor DataKitQueue<T: DataKitCompatible>: Sendable {
 		return await data.search(element)
 	}
 	
+	/// Searches for the all occurrences of the specified element in the queue.
+	///
+	/// - Parameter element: The element to search for.
+	/// - Returns: An array of tuple containing the element and its index if found, or an empty array if the element is not present.
+	public func searchAll(_ element: T) async -> [(T, Int)?] {
+		return await data.searchAllBy(element)
+	}
+	
 	/// Checks whether the stack is queue.
 	///
 	/// - Returns: `true` if the stack is empty, otherwise `false`.
@@ -131,6 +139,18 @@ struct DataKitQueueTests {
 		if let value = await sut.search(3) {
 			assertionFailure("Expected an element but got \(value)")
 		}
+	}
+	
+	@Test("searchAll returns all occurrences of the given element")
+	func searchAll() async throws {
+		let sut = makeSUT()
+		await sut.enqueue(1)
+		await sut.enqueue(2)
+		await sut.enqueue(1)
+		await sut.enqueue(1)
+		
+		let values = await sut.searchAll(1)
+		#expect(values.count == 3)
 	}
 	
 	// MARK: - Helpers

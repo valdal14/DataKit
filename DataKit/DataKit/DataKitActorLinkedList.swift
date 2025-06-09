@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// An actor-based LinkedList implementation.
 public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 	private var head: Node<T>?
 	private var listSize: Int = 0

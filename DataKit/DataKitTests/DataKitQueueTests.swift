@@ -186,6 +186,21 @@ struct DataKitQueueTests {
 		#expect(updatedElement == 14)
 	}
 	
+	@Test("update all elements in the queue")
+	func update_all() async throws {
+		let sut = makeSUT()
+		await sut.enqueue(1)
+		await sut.enqueue(2)
+		await sut.enqueue(3)
+		await sut.enqueue(2)
+		await sut.enqueue(6)
+		await sut.enqueue(2)
+		
+		try await sut.update(2, with: 14, configuration: .all)
+		let updatedElements = await sut.searchAll(14)
+		#expect(updatedElements.count == 3)
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> DataKitQueue<Int> {
 		return .init()

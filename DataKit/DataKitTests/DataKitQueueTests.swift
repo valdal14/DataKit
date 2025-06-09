@@ -20,6 +20,14 @@ public actor DataKitQueue<T: DataKitCompatible>: Sendable {
 		await data.enqueue(element)
 	}
 	
+	/// Removes and returns the element at the front of the queue.
+	///
+	/// - Returns: The dequeued element.
+	/// - Throws: `DataKitError.emptyStructure` if the list is empty.
+	public func dequeue() async throws -> T {
+		return try await data.dequeue()
+	}
+	
 	/// Checks whether the stack is queue.
 	///
 	/// - Returns: `true` if the stack is empty, otherwise `false`.
@@ -32,6 +40,13 @@ public actor DataKitQueue<T: DataKitCompatible>: Sendable {
 	/// - Returns: The number of elements in the stack.
 	public func getSize() async -> Int {
 		return await data.getSize()
+	}
+	
+	/// Returns a string representation of the queue contents.
+	///
+	/// - Returns: A string describing the elements in the queue.
+	public func dumpQueue() async -> String {
+		await data.dump()
 	}
 }
 
@@ -46,6 +61,23 @@ struct DataKitQueueTests {
 		await sut.enqueue(1)
 		isEmpty = await sut.isEmpty()
 		#expect(!isEmpty)
+	}
+	
+	@Test("dequeue an element from the queue")
+	func dequeue() async throws {
+		let sut = makeSUT()
+		await sut.enqueue(1)
+		await sut.enqueue(2)
+		await sut.enqueue(3)
+		
+		var size = await sut.getSize()
+		#expect(size == 3)
+		
+		let dequeuedValue = try await sut.dequeue()
+		#expect(dequeuedValue == 1)
+		
+		size = await sut.getSize()
+		#expect(size == 2)
 	}
 	
 	// MARK: - Helpers

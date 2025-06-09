@@ -46,7 +46,7 @@ public actor DataKitActorStack<T: DataKitCompatible>: Sendable {
 	/// Returns a string representation of the stack contents.
 	///
 	/// - Returns: A string describing the elements in the stack.
-	public func printStack() async -> String {
+	public func dumpStack() async -> String {
 		await data.dump()
 	}
 

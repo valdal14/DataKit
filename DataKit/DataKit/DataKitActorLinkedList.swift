@@ -7,7 +7,7 @@
 
 import Foundation
 
-public actor DataKitActorLinkedList<T: DataKitCompatible> {
+public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 	private var head: Node<T>?
 	private var listSize: Int = 0
 	

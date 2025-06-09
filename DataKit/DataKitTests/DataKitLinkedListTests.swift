@@ -100,7 +100,7 @@ struct DataKitLinkedListTests {
 		#expect(await ll.isEmpty() == false)
 	}
 	
-	@Test("searchBy returns nil when a node cannot be found")
+	@Test("search returns nil when a node cannot be found")
 	func search_nil() async throws {
 		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 28)
@@ -110,10 +110,10 @@ struct DataKitLinkedListTests {
 		await ll.add(newNode0)
 		await ll.add(newNode1)
 		
-		#expect(await ll.searchBy(MyCustomType.makeItem("Key2", 285)) == nil)
+		#expect(await ll.search(MyCustomType.makeItem("Key2", 285)) == nil)
 	}
 	
-	@Test("searchBy successfully finds the first node and return a its value and index in the list")
+	@Test("search successfully finds the first node and return a its value and index in the list")
 	func searchBy() async throws {
 		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 28)
@@ -127,7 +127,7 @@ struct DataKitLinkedListTests {
 		await ll.add(newNode2)
 		await ll.add(newNode3)
 		
-		if let element = await ll.searchBy(newNode1) {
+		if let element = await ll.search(newNode1) {
 			#expect(element.0.value == 2)
 			#expect(element.1 == 2)
 		} else {

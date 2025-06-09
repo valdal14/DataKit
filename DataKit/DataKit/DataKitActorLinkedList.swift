@@ -72,19 +72,18 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 		return getSize() == 0
 	}
 	
-	public func searchBy(_ value: T) -> (T, Int)? {
+	public func search(_ value: T) -> (T, Int)? {
 		if head == nil { return nil }
 		
-		var index = -1
+		var index = 0
 		var current = head
 		
 		while let node = current {
-			index += 1
 			if node.value == value {
-				return (node: node.value, index: index)
-			} else {
-				current = current?.next
+				return (node.value, index)
 			}
+			current = node.next
+			index += 1
 		}
 		
 		return nil

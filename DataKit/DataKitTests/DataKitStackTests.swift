@@ -149,6 +149,24 @@ struct DataKitStackTests {
 		#expect(foundUser.count == 1)
 	}
 	
+	@Test("update successfully update the first element found")
+	func update_all() async throws {
+		let sut = makeSUT()
+		let newUser1 = User(id: UUID(), name: "John", surname: "Doe", age: 30)
+		let newUser2 = User(id: UUID(), name: "Valerio", surname: "Dal", age: 40)
+		let newUser3 = User(id: newUser2.id, name: "Valerio", surname: "Dal", age: 40)
+		await sut.push(newUser1)
+		await sut.push(newUser2)
+		await sut.push(newUser3)
+		
+		let newUser = User(id: newUser2.id, name: "Grazia", surname: "Dal", age: 6)
+		
+		try await sut.update(newUser2, newElement: newUser, configuration: .all)
+		
+		let foundUser = await sut.searchAll(newUser)
+		#expect(foundUser.count == 2)
+	}
+	
 	// MARK: - Helper methods
 	private func makeSUT() -> DataKitActorStack<User> {
 		return .init()

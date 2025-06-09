@@ -121,7 +121,7 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 		
 		if head?.value == currentElement {
 			head?.value = newElement
-			return
+			if configuration == .one { return }
 		}
 		
 		var current = head

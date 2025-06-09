@@ -272,6 +272,24 @@ struct DataKitLinkedListTests {
 		}))
 	}
 	
+	@Test("peek returns the head element from the list")
+	func peek() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
+		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
+		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 32)
+		let newNode2: MyCustomType = MyCustomType.makeItem("Key2", 14)
+		await ll.push(newHead)
+		await ll.push(newNode0)
+		await ll.push(newNode1)
+		await ll.push(newNode2)
+		
+		let popHead = try await ll.peek()
+		let size = await ll.getSize()
+		#expect(popHead.value == 14)
+		#expect(size == 4)
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> DataKitActorLinkedList<MyCustomType> {
 		return .init()

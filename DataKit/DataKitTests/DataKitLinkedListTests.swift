@@ -329,6 +329,14 @@ extension DataKitLinkedListTests {
 		let size = await ll.getSize()
 		#expect(size == 1)
 	}
+	
+	@Test("dequeue throws an error when the queue is empty")
+	func dequeue_Throws() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		await #expect(throws: DataKitError.emptyStructure, performing: ({
+			try await ll.dequeue()
+		}))
+	}
 }
 
 // MARK: - Custom type with conformance to the DataKitCompatible

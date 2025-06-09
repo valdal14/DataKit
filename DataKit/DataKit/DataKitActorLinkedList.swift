@@ -199,10 +199,17 @@ public extension DataKitActorLinkedList {
 // MARK: - Add support for Queue implementation
 public extension DataKitActorLinkedList {
 	
+	/// Adds an element to the end of the list, mimicking queue enqueue behavior.
+	///
+	/// - Parameter value: The value to be enqueued.
 	func enqueue(_ value: T) {
 		add(value)
 	}
 	
+	/// Removes and returns the element at the front of the list, mimicking queue dequeue behavior.
+	///
+	/// - Returns: The dequeued element.
+	/// - Throws: `DataKitError.emptyStructure` if the list is empty.
 	func dequeue() throws -> T {
 		return try pop()
 	}

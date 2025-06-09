@@ -153,6 +153,18 @@ struct DataKitQueueTests {
 		#expect(values.count == 3)
 	}
 	
+	@Test("searchAll returns an empty list")
+	func searchAll_Returns_Empty_List() async throws {
+		let sut = makeSUT()
+		await sut.enqueue(1)
+		await sut.enqueue(2)
+		await sut.enqueue(1)
+		await sut.enqueue(1)
+		
+		let values = await sut.searchAll(14)
+		#expect(values.count == 0)
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> DataKitQueue<Int> {
 		return .init()

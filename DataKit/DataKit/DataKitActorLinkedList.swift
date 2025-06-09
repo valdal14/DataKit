@@ -202,4 +202,8 @@ public extension DataKitActorLinkedList {
 	func enqueue(_ value: T) {
 		add(value)
 	}
+	
+	func dequeue() throws -> T {
+		return try pop()
+	}
 }

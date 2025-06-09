@@ -313,6 +313,22 @@ extension DataKitLinkedListTests {
 		let size = await ll.getSize()
 		#expect(size == 2)
 	}
+	
+	@Test("dequeue the element from the queue")
+	func dequeue() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
+		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
+		await ll.enqueue(newHead)
+		await ll.enqueue(newNode0)
+		
+		let dequeueElement = try await ll.dequeue()
+		#expect(dequeueElement.keyName == "Head")
+		#expect(dequeueElement.value == 7)
+		
+		let size = await ll.getSize()
+		#expect(size == 1)
+	}
 }
 
 // MARK: - Custom type with conformance to the DataKitCompatible

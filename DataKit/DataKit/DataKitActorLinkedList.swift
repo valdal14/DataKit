@@ -195,3 +195,11 @@ public extension DataKitActorLinkedList {
 		return currentHead.value
 	}
 }
+
+// MARK: - Add support for Queue implementation
+public extension DataKitActorLinkedList {
+	
+	func enqueue(_ value: T) {
+		add(value)
+	}
+}

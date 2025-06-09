@@ -299,6 +299,22 @@ extension DataKitLinkedListTests {
 	}
 }
 
+// MARK: - DataKitLinkedListTests extension for testing the stack implementation methods
+extension DataKitLinkedListTests {
+	
+	@Test("enqueue the element into the queue")
+	func enqueue() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
+		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
+		await ll.enqueue(newHead)
+		await ll.enqueue(newNode0)
+		
+		let size = await ll.getSize()
+		#expect(size == 2)
+	}
+}
+
 // MARK: - Custom type with conformance to the DataKitCompatible
 struct MyCustomType: DataKitCompatible {
 	let keyName: String

@@ -158,7 +158,7 @@ struct DataKitLinkedListTests {
 		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
 		await #expect(throws: DataKitError.emptyStructure, performing: ({
-			try await ll.update(newHead, value: .makeItem(newHead.keyName, 14))
+			try await ll.update(newHead, newElement: .makeItem(newHead.keyName, 14))
 		}))
 	}
 	
@@ -174,7 +174,7 @@ struct DataKitLinkedListTests {
 		
 		let expectedNewHeadValue: Int = 14
 		let expectedNewHead: MyCustomType = MyCustomType.makeItem(newHead.keyName, expectedNewHeadValue)
-		try await ll.update(newHead, value: .makeItem(newHead.keyName, expectedNewHeadValue))
+		try await ll.update(newHead, newElement: .makeItem(newHead.keyName, expectedNewHeadValue))
 		
 		let elements = await ll.searchAllBy(expectedNewHead)
 		#expect(elements.count == 1)
@@ -195,7 +195,7 @@ struct DataKitLinkedListTests {
 		let expectedNewValue: Int = 99
 		let expectedNewNode: MyCustomType = MyCustomType.makeItem(newNode1.keyName, expectedNewValue)
 		
-		try await ll.update(newNode1, value: .makeItem(newNode1.keyName, expectedNewValue), configuration: .all)
+		try await ll.update(newNode1, newElement: .makeItem(newNode1.keyName, expectedNewValue), configuration: .all)
 		
 		let elements = await ll.searchAllBy(expectedNewNode)
 		#expect(elements.count == 2)
@@ -216,7 +216,7 @@ struct DataKitLinkedListTests {
 		let expectedNewValue: Int = 99
 		let expectedNewNode: MyCustomType = MyCustomType.makeItem(newNode1.keyName, expectedNewValue)
 		
-		try await ll.update(newNode1, value: .makeItem(newNode1.keyName, expectedNewValue))
+		try await ll.update(newNode1, newElement: .makeItem(newNode1.keyName, expectedNewValue))
 		
 		let elements = await ll.searchAllBy(expectedNewNode)
 		#expect(elements.count == 1)

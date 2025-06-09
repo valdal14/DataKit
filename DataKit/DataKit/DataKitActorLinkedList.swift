@@ -112,23 +112,23 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 	
 	/// Updates one or more occurrences of a value in the list.
 	/// - Parameters:
-	///   - element: The element to find and update.
-	///   - value: The new value to assign.
+	///   - currentElement: The element to find and update.
+	///   - newElement: The new value to assign.
 	///   - configuration: Whether to update only the first match (`.one`) or all matches (`.all`). Default is `.one`.
 	/// - Throws: `DataKitError.emptyStructure` if the list is empty.
-	public func update(_ element: T, value: T, configuration: UpdateType = .one) throws  {
+	public func update(_ currentElement: T, newElement: T, configuration: UpdateType = .one) throws  {
 		if head == nil { throw DataKitError.emptyStructure }
 		
-		if head?.value == element {
-			head?.value = value
+		if head?.value == currentElement {
+			head?.value = newElement
 			return
 		}
 		
 		var current = head
 		
 		while let node = current {
-			if node.value == element {
-				node.value = value
+			if node.value == currentElement {
+				node.value = newElement
 				if configuration == .one { break }
 			}
 			current = node.next

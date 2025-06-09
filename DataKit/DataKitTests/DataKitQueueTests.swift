@@ -28,6 +28,14 @@ public actor DataKitQueue<T: DataKitCompatible>: Sendable {
 		return try await data.dequeue()
 	}
 	
+	/// Returns the element at the front of the queue without removing it.
+	///
+	/// - Returns: The front element of the queue.
+	/// - Throws: `DataKitError.emptyStructure` if the queue is empty.
+	public func getFront() async throws -> T {
+		return try await data.peek()
+	}
+	
 	/// Checks whether the stack is queue.
 	///
 	/// - Returns: `true` if the stack is empty, otherwise `false`.
@@ -78,6 +86,17 @@ struct DataKitQueueTests {
 		
 		size = await sut.getSize()
 		#expect(size == 2)
+	}
+	
+	@Test("getFront returns the front element of the queue")
+	func getFront() async throws {
+		let sut = makeSUT()
+		await sut.enqueue(14)
+		await sut.enqueue(7)
+		await sut.enqueue(33)
+		
+		let value = try await sut.getFront()
+		#expect(value == 14)
 	}
 	
 	// MARK: - Helpers

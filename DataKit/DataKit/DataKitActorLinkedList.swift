@@ -166,4 +166,12 @@ public extension DataKitActorLinkedList {
 		head = newNode
 		listSize += 1
 	}
+	
+	func pop() throws -> T {
+		if let currentHead = head {
+			return currentHead.value
+		} else {
+			throw DataKitError.emptyStructure
+		}
+	}
 }

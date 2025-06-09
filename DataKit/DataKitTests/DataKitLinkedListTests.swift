@@ -236,6 +236,14 @@ struct DataKitLinkedListTests {
 		#expect(size == 3)
 	}
 	
+	@Test("pop from an empty list throws an error")
+	func pop_Empty_List_Throws() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		await #expect(throws: DataKitError.emptyStructure, performing: ({
+			let _ = try await ll.pop()
+		}))
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> DataKitActorLinkedList<MyCustomType> {
 		return .init()

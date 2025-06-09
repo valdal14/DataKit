@@ -7,11 +7,6 @@
 
 import Foundation
 
-public enum UpdateType: Sendable {
-	case one
-	case all
-}
-
 public actor DataKitActorLinkedList<T: DataKitCompatible> {
 	private var head: Node<T>?
 	private var listSize: Int = 0

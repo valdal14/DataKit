@@ -30,6 +30,10 @@ public actor DataKitActorStack<T: DataKitCompatible>: Sendable {
 	public func printStack()  async -> String {
 		await data.dump()
 	}
+	
+	public func search(_ element: T) async -> (T, Int)? {
+		return await data.search(element)
+	}
 }
 
 struct DataKitStackTests {
@@ -87,6 +91,24 @@ struct DataKitStackTests {
 		#expect(user.name == newUser2.name)
 		#expect(user.surname == newUser2.surname)
 		#expect(user.age == newUser2.age)
+	}
+	
+	@Test("search returns the found element")
+	func search() async throws {
+		let sut = makeSUT()
+		let newUser1 = User(id: UUID(), name: "John", surname: "Doe", age: 30)
+		let newUser2 = User(id: UUID(), name: "Valerio", surname: "Dal", age: 40)
+		await sut.push(newUser1)
+		await sut.push(newUser2)
+		
+		if let user = await sut.search(newUser1) {
+			#expect(newUser1.name == "John")
+			#expect(newUser1.surname == "Doe")
+			#expect(newUser1.age == 30)
+			#expect(newUser1.id == user.0.id)
+		} else {
+			assertionFailure("Expected user but got nil")
+		}
 	}
 	
 	// MARK: - Helper methods

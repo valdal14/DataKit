@@ -18,6 +18,10 @@ public actor DataKitActorStack<T: DataKitCompatible>: Sendable {
 	public func isEmpty() async -> Bool {
 		return await data.isEmpty()
 	}
+	
+	public func getSize() async -> Int {
+		return await data.getSize()
+	}
 }
 
 struct DataKitStackTests {
@@ -36,6 +40,13 @@ struct DataKitStackTests {
 		let sut = makeSUT()
 		let isStackEmpty = await sut.isEmpty()
 		#expect(isStackEmpty)
+	}
+	
+	@Test("getSize return 0 when the stack is empty")
+	func getSize_returns_zero() async throws {
+		let sut = makeSUT()
+		let size = await sut.getSize()
+		#expect(size == 0)
 	}
 	
 	// MARK: - Helper methods

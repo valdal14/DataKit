@@ -151,3 +151,19 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 		return output.description
 	}
 }
+
+// MARK: - Add support for Stack implementation
+public extension DataKitActorLinkedList {
+	/// Pushes a value onto the top of the stack.
+	///
+	/// This method inserts a new element at the head of the linked list,
+	/// effectively behaving like a stack's `push` operation.
+	///
+	/// - Parameter value: The value to be pushed onto the stack.
+	func push(_ value: T) {
+		let newNode = Node<T>(value: value)
+		newNode.next = head
+		head = newNode
+		listSize += 1
+	}
+}

@@ -222,6 +222,20 @@ struct DataKitLinkedListTests {
 		#expect(elements.count == 1)
 	}
 	
+	// MARK: - Tests for stack implementation
+	@Test("stack operations work correctly")
+	func stackOperations() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
+		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
+		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 32)
+		await ll.push(newHead)
+		await ll.push(newNode0)
+		await ll.push(newNode1)
+		let size = await ll.getSize()
+		#expect(size == 3)
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> DataKitActorLinkedList<MyCustomType> {
 		return .init()

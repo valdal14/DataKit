@@ -12,7 +12,7 @@ public actor DataKitActorStack<T: DataKitCompatible>: Sendable {
 	private var data: DataKitActorLinkedList<T> = DataKitActorLinkedList<T>()
 	
 	public func push(_ element: T) async {
-		await data.add(element)
+		await data.push(element)
 	}
 	
 	public func isEmpty() async -> Bool {
@@ -23,8 +23,8 @@ public actor DataKitActorStack<T: DataKitCompatible>: Sendable {
 		return await data.getSize()
 	}
 	
-	public func peek(_ value: T) async -> (T, Int)? {
-		return await data.search(value)
+	public func peek() async throws -> T {
+		return try await data.peek()
 	}
 	
 	public func printStack()  async -> String {
@@ -66,30 +66,27 @@ struct DataKitStackTests {
 		#expect(size == 1)
 	}
 	
-	@Test("peek returns nil when the element is not present in the stack")
+	@Test("peek throws when the element is not present in the stack")
 	func peek_returns_nil() async throws {
 		let sut = makeSUT()
-		let newUser = User(id: UUID(), name: "John", surname: "Doe", age: 30)
-		if let _ = await sut.peek(newUser) {
-			assertionFailure("Expected nil but found an element")
-		} else {
-			#expect(await sut.isEmpty())
-		}
+		await #expect(throws: DataKitError.emptyStructure, performing: ({
+			let _ = try await sut.peek()
+		}))
 	}
 	
 	@Test("peek returns element when the it is present in the stack")
 	func peek() async throws {
 		let sut = makeSUT()
-		let newUser = User(id: UUID(), name: "John", surname: "Doe", age: 30)
-		await sut.push(newUser)
+		let newUser1 = User(id: UUID(), name: "John", surname: "Doe", age: 30)
+		let newUser2 = User(id: UUID(), name: "Valerio", surname: "Dal", age: 40)
+		await sut.push(newUser1)
+		await sut.push(newUser2)
 		
-		if let user = await sut.peek(newUser) {
-			#expect(user.0.name == "John")
-			#expect(user.0.surname == "Doe")
-			#expect(user.0.age == 30)
-		} else {
-			assertionFailure("Expected element but was not found")
-		}
+		let user = try await sut.peek()
+		#expect(user.id == newUser2.id)
+		#expect(user.name == newUser2.name)
+		#expect(user.surname == newUser2.surname)
+		#expect(user.age == newUser2.age)
 	}
 	
 	// MARK: - Helper methods

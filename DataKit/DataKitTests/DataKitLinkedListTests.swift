@@ -244,6 +244,26 @@ struct DataKitLinkedListTests {
 		}))
 	}
 	
+	@Test("pop always returns the head of the list")
+	func pop() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
+		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
+		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 32)
+		await ll.push(newHead)
+		await ll.push(newNode0)
+		await ll.push(newNode1)
+		
+		let popHead = try await ll.pop()
+		#expect(popHead.value == 32)
+		let popAgainHead = try await ll.pop()
+		#expect(popAgainHead.value == 13)
+		let size = await ll.getSize()
+		let isEmpty = await ll.isEmpty()
+		#expect(size == 1)
+		#expect(!isEmpty)
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> DataKitActorLinkedList<MyCustomType> {
 		return .init()

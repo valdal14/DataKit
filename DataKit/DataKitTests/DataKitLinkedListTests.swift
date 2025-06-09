@@ -264,6 +264,14 @@ struct DataKitLinkedListTests {
 		#expect(!isEmpty)
 	}
 	
+	@Test("peek throws if the list is empty")
+	func peek_Empty_List_Throws() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		await #expect(throws: DataKitError.emptyStructure, performing: ({
+			_ = try await ll.peek()
+		}))
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> DataKitActorLinkedList<MyCustomType> {
 		return .init()

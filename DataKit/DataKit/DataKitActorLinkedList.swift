@@ -167,6 +167,13 @@ public extension DataKitActorLinkedList {
 		listSize += 1
 	}
 	
+	/// Removes and returns the value at the top of the stack.
+	///
+	/// This method removes the element at the head of the linked list,
+	/// effectively behaving like a stack's `pop` operation.
+	///
+	/// - Returns: The value at the top of the stack.
+	/// - Throws: `DataKitError.emptyStructure` if the list is empty.
 	func pop() throws -> T {
 		if let currentHead = head {
 			head = currentHead.next
@@ -175,5 +182,16 @@ public extension DataKitActorLinkedList {
 		} else {
 			throw DataKitError.emptyStructure
 		}
+	}
+	
+	/// Returns the value at the top of the stack without removing it.
+	///
+	/// - Returns: The value at the top of the stack.
+	/// - Throws: `DataKitError.emptyStructure` if the list is empty.
+	func peek() throws -> T {
+		guard let currentHead = head else {
+			throw DataKitError.emptyStructure
+		}
+		return currentHead.value
 	}
 }

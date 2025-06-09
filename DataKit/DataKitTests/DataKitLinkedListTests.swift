@@ -140,6 +140,14 @@ public actor DataKitActorLinkedList<T: DataKitCompatible> {
 			head?.value = value
 			return
 		}
+		
+		var current = head
+		while let node = current {
+			if node.value == element {
+				node.value = value
+			}
+			current = node.next
+		}
 	}
 }
 
@@ -286,8 +294,6 @@ struct DataKitLinkedListTests {
 		
 		let foundElements = await ll.searchAllBy(newNode1)
 		#expect(foundElements.count == 2)
-		let strList = await ll.dump()
-		print(strList)
 	}
 	
 	
@@ -317,7 +323,31 @@ struct DataKitLinkedListTests {
 		} else {
 			assertionFailure("Could not find the node")
 		}
+	}
+	
+	@Test("updateBy updates the node with a new value")
+	func updateBy_node() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
+		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
+		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 11)
+		let newNode2: MyCustomType = MyCustomType.makeItem("Key2", 1)
+		await ll.add(newHead)
+		await ll.add(newNode0)
+		await ll.add(newNode1)
+		await ll.add(newNode2)
 		
+		let expectedNewValue: Int = 99
+		let expectedNewNode: MyCustomType = MyCustomType.makeItem(newNode1.keyName, expectedNewValue)
+		
+		try await ll.update(newNode1, value: .makeItem(newNode1.keyName, expectedNewValue))
+		
+		if let element = await ll.searchBy(expectedNewNode) {
+			#expect(element.0.value == expectedNewValue)
+			#expect(element.1 == 2)
+		} else {
+			assertionFailure("Could not find the node")
+		}
 	}
 	
 	// MARK: - Helpers

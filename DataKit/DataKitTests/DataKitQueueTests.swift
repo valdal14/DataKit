@@ -36,6 +36,11 @@ public actor DataKitQueue<T: DataKitCompatible>: Sendable {
 		return try await data.peek()
 	}
 	
+	
+	public func search(_ element: T) async -> (T, Int)? {
+		return await data.search(element)
+	}
+	
 	/// Checks whether the stack is queue.
 	///
 	/// - Returns: `true` if the stack is empty, otherwise `false`.
@@ -97,6 +102,21 @@ struct DataKitQueueTests {
 		
 		let value = try await sut.getFront()
 		#expect(value == 14)
+	}
+	
+	@Test("search returns the first element found by a given value")
+	func search() async throws {
+		let sut = makeSUT()
+		await sut.enqueue(1)
+		await sut.enqueue(2)
+		await sut.enqueue(1)
+		
+		if let value = await sut.search(1) {
+			#expect(value.0 == 1)
+			#expect(value.1 == 0)
+		} else {
+			assertionFailure("Expected an element but got nil")
+		}
 	}
 	
 	// MARK: - Helpers

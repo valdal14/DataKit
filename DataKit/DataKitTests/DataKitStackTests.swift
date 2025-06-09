@@ -49,6 +49,15 @@ struct DataKitStackTests {
 		#expect(size == 0)
 	}
 	
+	@Test("getSize return the size of the stack when the stack is not empty")
+	func getSize() async throws {
+		let sut = makeSUT()
+		let newUser = User(id: UUID(), name: "John", surname: "Doe", age: 30)
+		await sut.push(newUser)
+		let size = await sut.getSize()
+		#expect(size == 1)
+	}
+	
 	// MARK: - Helper methods
 	private func makeSUT() -> DataKitActorStack<User> {
 		return .init()

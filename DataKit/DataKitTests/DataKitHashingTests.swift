@@ -67,7 +67,7 @@ struct DataKitHashingTests {
 	
 	@Test("init with custom capacity: Int = 11")
 	func init_custom_size() async throws {
-		let expectedSize = 3
+		let expectedSize = 11
 		let sut = try makeSUT(capacity: expectedSize)
 		let currentSize = await sut.getSize()
 		#expect(currentSize == expectedSize)

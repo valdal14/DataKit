@@ -37,6 +37,14 @@ public actor DataKitQueue<T: DataKitCompatible>: Sendable {
 		return try await data.peek()
 	}
 	
+	/// Retrieves the value at the rear (tail) of the queue.
+	///
+	/// - Throws: `DataKitError.emptyStructure` if the queue is empty.
+	/// - Returns: The value of the rear node.
+	public func getRear() async throws -> T {
+		return try await data.getTail()
+	}
+	
 	/// Searches for the first occurrence of the specified element in the queue.
 	///
 	/// - Parameter element: The element to search for.

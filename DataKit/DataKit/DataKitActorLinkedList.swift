@@ -216,10 +216,7 @@ public extension DataKitActorLinkedList {
 	/// - Returns: The value at the top of the stack.
 	/// - Throws: `DataKitError.emptyStructure` if the list is empty.
 	func peek() throws -> T {
-		guard let currentHead = head else {
-			throw DataKitError.emptyStructure
-		}
-		return currentHead.value
+		try getHead()
 	}
 }
 

@@ -33,9 +33,10 @@ public actor DataKitHashing<K: Hashable, T: DataKitCompatible>: Sendable {
 	public func getSize() -> Int {
 		buckets.count
 	}
-	
-	
-	private static nonisolated func validHashTableSize(_ number: Int, maxSize: Int = 97) throws {
+}
+
+private extension DataKitHashing {
+	static nonisolated func validHashTableSize(_ number: Int, maxSize: Int = 97) throws {
 		if number <= maxSize {
 			guard number > 1 else { throw DataKitError.invalidHashTableCapacity }
 			guard number > 3 else { return }

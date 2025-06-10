@@ -254,6 +254,29 @@ struct DataKitLinkedListTests {
 		#expect(tail.value == 13)
 	}
 	
+	@Test("getTail returns the tail node correctly during deleting operations")
+	func getTail_returns_tail_node_after_node_deletion() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
+		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
+		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 11)
+		let newNode2: MyCustomType = MyCustomType.makeItem("Key2", 14)
+		await ll.add(newHead)
+		await ll.add(newNode0)
+		await ll.add(newNode1)
+		await ll.add(newNode2)
+		
+		var tail = try await ll.getTail()
+		#expect(tail.keyName == "Key2")
+		#expect(tail.value == 14)
+		// deleting the current tail
+		try await ll.delete(newNode2)
+		// assert the new tail
+		tail = try await ll.getTail()
+		#expect(tail.keyName == "Key1")
+		#expect(tail.value == 11)
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> DataKitActorLinkedList<MyCustomType> {
 		return .init()

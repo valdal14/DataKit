@@ -285,6 +285,19 @@ struct DataKitLinkedListTests {
 		}))
 	}
 	
+	@Test("getHead returns the head node from the list")
+	func getHead() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 14)
+		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
+		await ll.add(newHead)
+		await ll.add(newNode0)
+		
+		let tail = try await ll.getHead()
+		#expect(tail.keyName == "Head")
+		#expect(tail.value == 14)
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> DataKitActorLinkedList<MyCustomType> {
 		return .init()

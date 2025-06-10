@@ -241,6 +241,19 @@ struct DataKitLinkedListTests {
 		#expect(tail.value == 14)
 	}
 	
+	@Test("getTail returns the tail node from the list")
+	func getTail_returns_tail_node() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 14)
+		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
+		await ll.add(newHead)
+		await ll.add(newNode0)
+		
+		let tail = try await ll.getTail()
+		#expect(tail.keyName == "Key0")
+		#expect(tail.value == 13)
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> DataKitActorLinkedList<MyCustomType> {
 		return .init()

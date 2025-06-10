@@ -222,6 +222,14 @@ struct DataKitLinkedListTests {
 		#expect(elements.count == 1)
 	}
 	
+	@Test("getTail throws when the tail node is nil")
+	func getTail_throws() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		await #expect(throws: DataKitError.emptyStructure, performing: ({
+			try await ll.getTail()
+		}))
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> DataKitActorLinkedList<MyCustomType> {
 		return .init()

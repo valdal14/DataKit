@@ -10,6 +10,7 @@ import Foundation
 /// An actor-based LinkedList implementation.
 public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 	private var head: Node<T>?
+	private var tail: Node<T>?
 	private var listSize: Int = 0
 	
 	/// Initialises an empty linked list.
@@ -18,14 +19,14 @@ public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 	/// Adds a new value to the end of the linked list.
 	/// - Parameter value: The value to be added to the list.
 	public func add(_ value: T) {
+		let newNode = Node<T>(value: value)
+		
 		if head == nil {
-			head = Node<T>(value: value)
+			head = newNode
+			tail = newNode
 		} else {
-			var current = head
-			while current?.next != nil {
-				current = current?.next
-			}
-			current?.next = Node<T>(value: value)
+			tail?.next = newNode
+			tail = newNode
 		}
 		
 		listSize += 1
@@ -38,6 +39,9 @@ public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 		if head == nil { throw DataKitError.emptyStructure }
 		
 		if head?.value == value {
+			if head === tail {
+				tail = nil
+			}
 			head = head?.next
 			listSize -= 1
 			return
@@ -48,7 +52,11 @@ public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 		
 		while let c = current {
 			if c.value == value {
-				previous?.next = current?.next
+				previous?.next = c.next
+				// Update tail if last node is removed
+				if c === tail {
+					tail = previous
+				}
 				listSize -= 1
 				break
 			}
@@ -134,6 +142,15 @@ public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 			}
 			current = node.next
 		}
+	}
+	
+	/// Returns the value of the last (tail) node in the linked list.
+	///
+	/// - Throws: `DataKitError.emptyStructure` if the list is empty.
+	/// - Returns: The value of the tail node.
+	public func getTail() throws -> T {
+		guard let tailNode = tail?.value else { throw DataKitError.emptyStructure }
+		return tailNode
 	}
 	
 	/// Returns a string representation of all values in the list.

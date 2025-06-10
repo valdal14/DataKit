@@ -230,6 +230,17 @@ struct DataKitLinkedListTests {
 		}))
 	}
 	
+	@Test("getTail returns the head as a tail node when the list only has 1 element")
+	func getTail() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 14)
+		await ll.add(newHead)
+		
+		let tail = try await ll.getTail()
+		#expect(tail.keyName == "Head")
+		#expect(tail.value == 14)
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> DataKitActorLinkedList<MyCustomType> {
 		return .init()

@@ -277,6 +277,14 @@ struct DataKitLinkedListTests {
 		#expect(tail.value == 11)
 	}
 	
+	@Test("getHead throws when the head node is nil")
+	func getHead_throws() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		await #expect(throws: DataKitError.emptyStructure, performing: ({
+			try await ll.getHead()
+		}))
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> DataKitActorLinkedList<MyCustomType> {
 		return .init()

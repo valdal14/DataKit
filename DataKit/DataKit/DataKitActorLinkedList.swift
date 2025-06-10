@@ -144,6 +144,15 @@ public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 		}
 	}
 	
+	/// Returns the value of the first (head) node in the linked list.
+	///
+	/// - Throws: `DataKitError.emptyStructure` if the list is empty.
+	/// - Returns: The value of the head node.
+	public func getHead() throws -> T {
+		guard let listHead = head else { throw DataKitError.emptyStructure }
+		return listHead.value
+	}
+	
 	/// Returns the value of the last (tail) node in the linked list.
 	///
 	/// - Throws: `DataKitError.emptyStructure` if the list is empty.

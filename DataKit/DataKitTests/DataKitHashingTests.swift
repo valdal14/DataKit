@@ -159,8 +159,15 @@ private extension DataKitHashTable {
 
 struct DataKitHashingTests {
 	
+	@Test("add throws when the chosen capacity is too small")
+	func add_throws_min_value() async throws {
+		#expect(throws: DataKitError.invalidHashTableCapacity, performing: ({
+			let _ = try makeSUT(capacity: 0)
+		}))
+	}
+	
 	@Test("add successfully add a new element to the hash table")
-	func test() async throws {
+	func add() async throws {
 		let sut = try makeSUT(capacity: 2)
 		try await sut.add(.init(key: 23, value: .init(brand: .ferrari, year: 2025)))
 		try await sut.add(.init(key: 44, value: .init(brand: .lamborghini, year: 2022)))

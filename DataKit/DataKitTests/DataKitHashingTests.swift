@@ -166,6 +166,13 @@ struct DataKitHashingTests {
 		}))
 	}
 	
+	@Test("add throws when the chosen capacity is too big")
+	func add_throws_max_value() async throws {
+		#expect(throws: DataKitError.invalidHashTableCapacity, performing: ({
+			let _ = try makeSUT(capacity: 127)
+		}))
+	}
+	
 	@Test("add successfully add a new element to the hash table")
 	func add() async throws {
 		let sut = try makeSUT(capacity: 2)

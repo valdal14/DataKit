@@ -97,6 +97,7 @@ private extension DataKitHashTableFactory {
 	}
 }
 
+// MARK: - DataKitHashTable Implementation
 public actor DataKitHashTable<T: DataKitHashable>: Sendable {
 	private let maxElement: Int
 	private let hashTableSize: Int
@@ -143,7 +144,10 @@ public actor DataKitHashTable<T: DataKitHashable>: Sendable {
 		}
 		return keys
 	}
-	
+}
+
+// MARK: - DataKitHashTable - Double Hashing Helpers
+private extension DataKitHashTable {
 	private func singleHashFunction(_ element: T) -> Int {
 		return element.key % hashTableSize
 	}

@@ -8,88 +8,167 @@
 import DataKit
 import Testing
 
-public actor DataKitHashing<K: Hashable, T: DataKitCompatible>: Sendable {
-	private typealias Element = (key: K, value: T)
-	private typealias Bucket = [Element]
+public protocol DataKitHashable {
+	associatedtype T: DataKitCompatible
+	var key: Int { get set }
+	var value: T { get set }
+}
+
+public struct DataKitHashTableFactory: Sendable {
+	private static let minTableSize: Int = 2
+	private static let maxTableSize: Int = 126
+	private static let maxLambdaValue: Double = 0.5
+	private static let minLambdaValue: Double = 0.3
+	private static let lambdaStep: Double = 0.5
+	private static let rationStartingValue: Double = 1.0
 	
-	private var buckets: [Bucket] = []
-	
-	/// Creates a new instance of `DataKitHashing` with a specified capacity.
-	///
-	/// The `capacity` parameter determines the number of buckets in the hash table.
-	/// By default, the capacity is set to `7`. If a different value is provided,
-	/// it must be a prime number otherwise, an error is thrown.
-	///
-	/// - Parameter capacity: The number of buckets in the hash table.
-	/// - Throws: `DataKitError.invalidHashTableCapacity` if the capacity is not a valid prime number.
-	///
-	public init(capacity: Int = 7) throws {
-		try Self.validHashTableSize(capacity)
-		self.buckets = Array(repeating: [], count: capacity)
-	}
-	
-	/// Returns the size of the current HastTable instance
-	/// - Returns: an Int representing the size of the bucket
-	public func getSize() -> Int {
-		buckets.count
+	public static func make<T: DataKitHashable>(tableSize: Int) throws -> DataKitHashTable<T> {
+		if tableSize < minTableSize || tableSize > maxTableSize { throw DataKitError.invalidHashTableCapacity }
+		let hashTableSize: Int = self.computeLoadFactor(chosenSize: tableSize, ratio: rationStartingValue)
+		var r: Int = minTableSize
+		if tableSize > minTableSize { r = previousPrime(hashTableSize - 1) }
+		let elements: [T?] = Array(repeating: nil, count: hashTableSize)
+		return .init(maxElement: tableSize, hashTableSize: hashTableSize, r: r, elements: elements)
 	}
 }
 
-private extension DataKitHashing {
-	static nonisolated func validHashTableSize(_ number: Int, maxSize: Int = 97) throws {
-		if number <= maxSize {
-			guard number > 1 else { throw DataKitError.invalidHashTableCapacity }
-			guard number > 3 else { return }
-			guard number % 2 != 0 && number % 3 != 0 else { throw DataKitError.invalidHashTableCapacity }
+// MARK: - DataKitHashing determine HashTable Size
+private extension DataKitHashTableFactory {
+	
+	static func computeLoadFactor(chosenSize: Int, ratio: Double) -> Int {
+		let lambda: Double = Double(chosenSize) / ratio
+		
+		if lambda >= minLambdaValue && lambda <= maxLambdaValue {
+			let nPrime: Int = nextPrime(Int(ratio))
+			let pPrime: Int = previousPrime(Int(ratio))
 			
-			var i = 5
-			while i * i <= number {
-				if number % i == 0 || number % (i + 2) == 0 {
-					throw DataKitError.invalidHashTableCapacity
+			if (nPrime < pPrime) {
+				return nPrime
+			} else {
+				return pPrime
+			}
+		}
+		
+		return computeLoadFactor(chosenSize: chosenSize, ratio: ratio + lambdaStep)
+	}
+	
+	static func isPrime(_ n: Int) -> Bool {
+		if (n <= 1) { return false };
+		if (n <= 3) { return true };
+		if (n % 2 == 0 || n % 3 == 0) { return false };
+		
+		let limit: Int = Int(sqrt(Double(n)));
+		var i = 5;
+		let increment = 6;
+		
+		while(i <= limit) {
+			if (n % i == 0 || n % (i + 2) == 0) {
+				return false;
+			}
+			i += increment;
+		}
+		
+		return true;
+	}
+	
+	static func nextPrime(_ n: Int) -> Int {
+		var num = n;
+		if (num <= 2) { return 2 };
+		if (num % 2 == 0) { num += 1 };
+		
+		while (!isPrime(num)) {
+			num += 2;
+		}
+		
+		return num;
+	}
+	
+	static func previousPrime(_ n: Int) -> Int {
+		var num = n;
+		if (num <= 2) { return 2 };
+		if (num % 2 == 0) { num -= 1 };
+		
+		while (!isPrime(num))
+		{
+			num -= 2;
+		}
+		
+		return num;
+	}
+}
+
+public actor DataKitHashTable<T: DataKitHashable>: Sendable {
+	private let maxElement: Int
+	private let hashTableSize: Int
+	private let r: Int
+	private var elements: [T?]
+	private var itemCount: Int = 0
+	
+	public init(maxElement: Int, hashTableSize: Int, r: Int, elements: [T?]) {
+		self.maxElement = maxElement
+		self.hashTableSize = hashTableSize
+		self.r = r
+		self.elements = elements
+	}
+	
+	public func add(_ element: T) throws {
+		if itemCount <= maxElement {
+			let index = singleHashFunction(element)
+			if let _ = elements[index] {
+				for i in 1..<hashTableSize {
+					let newIndex: Int = doubleHashFunction(element, at: i)
+					if let _ = elements[newIndex] {
+						continue
+					} else {
+						itemCount += 1
+						elements[newIndex] = element
+						break
+					}
 				}
-				i += 6
+			} else {
+				itemCount += 1
+				elements[index] = element
 			}
 		} else {
 			throw DataKitError.exceededHashTableCapacity
 		}
 	}
+	
+	public func getStoredKeys() -> [Int] {
+		var keys: [Int] = []
+		for element in elements {
+			if let e = element {
+				keys.append(e.key)
+			}
+		}
+		return keys
+	}
+	
+	private func singleHashFunction(_ element: T) -> Int {
+		return element.key % hashTableSize
+	}
+	
+	private func doubleHashFunction(_ element: T, at index: Int) -> Int {
+		return (singleHashFunction(element) + (index * (r - (element.key % r)))) % hashTableSize
+	}
 }
 
 struct DataKitHashingTests {
 	
-	@Test("init with default (capacity: Int = 7)")
-	func init_default() async throws {
-		let sut = try makeSUT()
-		let expectedSize = 7
-		let currentSize = await sut.getSize()
-		#expect(currentSize == expectedSize)
-	}
-	
-	@Test("init with custom capacity: Int = 11")
-	func init_custom_size() async throws {
-		let expectedSize = 11
-		let sut = try makeSUT(capacity: expectedSize)
-		let currentSize = await sut.getSize()
-		#expect(currentSize == expectedSize)
-	}
-	
-	@Test("init throws when the custom capacity: Int value is not a prime number")
-	func init_throws() async throws {
-		await #expect(throws: DataKitError.invalidHashTableCapacity, performing: ({
-			let _ = try await makeSUT(capacity: 4)
-		}))
-	}
-	
-	@Test("init throws when the custom capacity: Int value is greater than the default max size Int value")
-	func init_throws_max_size() async throws {
-		await #expect(throws: DataKitError.exceededHashTableCapacity, performing: ({
-			let _ = try await makeSUT(capacity: 101)
-		}))
+	@Test("add successfully add a new element to the hash table")
+	func test() async throws {
+		let sut = try makeSUT(capacity: 2)
+		try await sut.add(.init(key: 23, value: .init(brand: .ferrari, year: 2025)))
+		try await sut.add(.init(key: 44, value: .init(brand: .lamborghini, year: 2022)))
+		try await sut.add(.init(key: 55, value: .init(brand: .porsche, year: 2021)))
+		let expectedKeys: [Int] = [55, 44, 23]
+		let currentKeys: [Int] = await sut.getStoredKeys()
+		#expect(currentKeys == expectedKeys)
 	}
 	
 	// MARK: - Helpers
-	private func makeSUT(capacity: Int = 7) throws -> DataKitHashing<Int, Car> {
-		try .init(capacity: capacity)
+	private func makeSUT(capacity: Int = 7) throws -> DataKitHashTable<HashedCar> {
+		try DataKitHashTableFactory.make(tableSize: capacity)
 	}
 }
 
@@ -108,5 +187,16 @@ struct Car: DataKitCompatible {
 	init(brand: Brand, year: UInt32) {
 		self.brand = brand
 		self.year = year
+	}
+}
+
+
+struct HashedCar: DataKitHashable {
+	var key: Int
+	var value: Car
+	
+	init(key: Int, value: Car) {
+		self.key = key
+		self.value = value
 	}
 }

@@ -114,10 +114,10 @@ public actor DataKitHashTable<T: DataKitHashable>: Sendable {
 	
 	public func add(_ element: T) throws {
 		if itemCount <= maxElement {
-			let index = singleHashFunction(element)
+			let index = singleHashFunction(element.key)
 			if let _ = elements[index] {
 				for i in 1..<hashTableSize {
-					let newIndex: Int = doubleHashFunction(element, at: i)
+					let newIndex: Int = doubleHashFunction(element.key, at: i)
 					if let _ = elements[newIndex] {
 						continue
 					} else {
@@ -148,12 +148,12 @@ public actor DataKitHashTable<T: DataKitHashable>: Sendable {
 
 // MARK: - DataKitHashTable - Double Hashing Helpers
 private extension DataKitHashTable {
-	private func singleHashFunction(_ element: T) -> Int {
-		return element.key % hashTableSize
+	private func singleHashFunction(_ key: Int) -> Int {
+		return key % hashTableSize
 	}
 	
-	private func doubleHashFunction(_ element: T, at index: Int) -> Int {
-		return (singleHashFunction(element) + (index * (r - (element.key % r)))) % hashTableSize
+	private func doubleHashFunction(_ key: Int, at index: Int) -> Int {
+		return (singleHashFunction(key) + (index * (r - (key % r)))) % hashTableSize
 	}
 }
 
@@ -190,7 +190,7 @@ struct DataKitHashingTests {
 	}
 }
 
-// MARK: - Custom type with conformance to the DataKitCompatible
+// MARK: - Custom type with conformance to the DataKitCompatible & DataKitHashable
 enum Brand {
 	case ferrari
 	case lamborghini
@@ -207,7 +207,6 @@ struct Car: DataKitCompatible {
 		self.year = year
 	}
 }
-
 
 struct HashedCar: DataKitHashable {
 	var key: Int

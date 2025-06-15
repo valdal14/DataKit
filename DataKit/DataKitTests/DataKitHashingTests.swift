@@ -8,7 +8,7 @@
 import DataKit
 import Testing
 
-public protocol DataKitHashable {
+public protocol DataKitHashable: Equatable {
 	associatedtype T: DataKitCompatible
 	var key: Int { get set }
 	var value: T { get set }
@@ -135,6 +135,31 @@ public actor DataKitHashTable<T: DataKitHashable>: Sendable {
 		}
 	}
 	
+	public func searchBy(_ key: Int) -> T? {
+		let index = singleHashFunction(key)
+		if let element = elements[index] {
+			if element.key == key {
+				return element
+			} else {
+				for i in 1..<hashTableSize {
+					let newIndex: Int = doubleHashFunction(key, at: i)
+					if let element = elements[newIndex] {
+						if element.key == key {
+							return element
+						} else {
+							return nil
+						}
+					} else {
+						return nil
+					}
+				}
+				return nil
+			}
+		} else {
+			return nil
+		}
+	}
+	
 	public func getStoredKeys() -> [Int] {
 		var keys: [Int] = []
 		for element in elements {
@@ -173,7 +198,7 @@ struct DataKitHashingTests {
 		}))
 	}
 	
-	@Test("add successfully add a new element to the hash table")
+	@Test("add successfully adds a new element to the hash table")
 	func add() async throws {
 		let sut = try makeSUT(capacity: 2)
 		try await sut.add(.init(key: 23, value: .init(brand: .ferrari, year: 2025)))
@@ -182,6 +207,30 @@ struct DataKitHashingTests {
 		let expectedKeys: [Int] = [55, 44, 23]
 		let currentKeys: [Int] = await sut.getStoredKeys()
 		#expect(currentKeys == expectedKeys)
+	}
+	
+	@Test("search returns the element by given key when a collision occurs")
+	func search_with_collision() async throws {
+		let sut = try makeSUT(capacity: 2)
+		try await sut.add(.init(key: 23, value: .init(brand: .ferrari, year: 2025)))
+		try await sut.add(.init(key: 44, value: .init(brand: .lamborghini, year: 2022)))
+		try await sut.add(.init(key: 55, value: .init(brand: .porsche, year: 2021)))
+		
+		let expectedElement: HashedCar? = .init(key: 44, value: .init(brand: .lamborghini, year: 2022))
+		let currentElement: HashedCar? = await sut.searchBy(44)
+		#expect(currentElement == expectedElement)
+	}
+	
+	@Test("search returns the element by given key when no collision occurs")
+	func search_no_collision() async throws {
+		let sut = try makeSUT(capacity: 2)
+		try await sut.add(.init(key: 13, value: .init(brand: .ferrari, year: 2025)))
+		try await sut.add(.init(key: 24, value: .init(brand: .lamborghini, year: 2022)))
+		try await sut.add(.init(key: 35, value: .init(brand: .porsche, year: 2021)))
+		
+		let expectedElement: HashedCar? = .init(key: 24, value: .init(brand: .lamborghini, year: 2022))
+		let currentElement: HashedCar? = await sut.searchBy(24)
+		#expect(currentElement == expectedElement)
 	}
 	
 	// MARK: - Helpers

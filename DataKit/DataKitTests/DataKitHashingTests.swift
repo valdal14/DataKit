@@ -233,6 +233,15 @@ struct DataKitHashingTests {
 		#expect(currentElement == expectedElement)
 	}
 	
+	@Test("search return nil as soon as it finds a nil element at hashed index")
+	func search_nil() async throws {
+		let sut = try makeSUT(capacity: 2)
+		try await sut.add(.init(key: 88, value: .init(brand: .ferrari, year: 2025)))
+		let expectedElement: HashedCar? = nil
+		let currentElement: HashedCar? = await sut.searchBy(188)
+		#expect(currentElement == expectedElement)
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT(capacity: Int = 7) throws -> DataKitHashTable<HashedCar> {
 		try DataKitHashTableFactory.make(tableSize: capacity)

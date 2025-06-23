@@ -263,6 +263,16 @@ struct DataKitHashingTests {
 		#expect(currentElement == expectedElement)
 	}
 	
+	@Test("update throws when the element is not present in the table")
+	func update_throws() async throws {
+		let sut = try makeSUT(capacity: 2)
+		try await sut.add(.init(key: 88, value: .init(brand: .ferrari, year: 2025)))
+		
+		await #expect(throws: DataKitError.elementNotFound, performing: ({
+			try await sut.update(key: 35, with: .init(key: 35, value: .init(brand: .lamborghini, year: 2014)))
+		}))
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT(capacity: Int = 7) throws -> DataKitHashTable<HashedCar> {
 		try DataKitHashTableFactory.make(tableSize: capacity)

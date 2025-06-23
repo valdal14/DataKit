@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-test-macos:
-    runs-on: macos-14 # latest macOS GitHub runner with Xcode
+    runs-on: macos-14
 
     steps:
       - name: Checkout code
@@ -17,9 +17,10 @@ jobs:
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '15.4' # or whatever you use
+          xcode-version: '15.4'
 
       - name: Build and run tests on macOS
         run: |
-          xcodebuild -scheme DataKit -destination 'platform=macOS' clean test
+          xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests -destination 'platform=macOS' clean test
+
 

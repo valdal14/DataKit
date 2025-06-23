@@ -19,10 +19,6 @@ jobs:
         with:
           xcode-version: 'latest-stable'  # Use latest stable version
 
-      - name: List available destinations
-        run: |
-          xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests -showdestinations
-
       - name: Build and run tests on macOS
         run: |
-          xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests -destination 'platform=macOS,name=My Mac' clean test
+          xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests -destination 'platform=macOS,name=Any Mac' clean test

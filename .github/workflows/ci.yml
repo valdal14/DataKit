@@ -16,7 +16,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Debugging steps (keep them for now to confirm environment)
+    # Debugging steps (can remove these once everything is stable)
     - name: List installed Xcode versions
       run: ls -F /Applications/ | grep "Xcode"
       continue-on-error: true
@@ -31,7 +31,6 @@ jobs:
     - name: Confirm Xcode version after selection
       run: xcode-select -p
 
-    # NEW DEBUGGING STEP: List contents of the repo root and the DataKit folder
     - name: List repository contents
       run: |
         echo "Contents of GITHUB_WORKSPACE (repository root):"
@@ -49,4 +48,7 @@ jobs:
           -scheme DataKitTests \
           -project DataKit.xcodeproj \
           -destination 'platform=macOS,arch=arm64' \
+          CODE_SIGN_IDENTITY="" \             # <--- ADDED
+          CODE_SIGNING_REQUIRED=NO \          # <--- ADDED
+          CODE_SIGNING_ALLOWED=NO \           # <--- ADDED
           ONLY_ACTIVE_ARCH=NO

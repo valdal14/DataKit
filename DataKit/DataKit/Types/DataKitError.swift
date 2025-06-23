@@ -9,4 +9,7 @@ import Foundation
 
 public enum DataKitError: Error, Equatable {
 	case emptyStructure
+	case invalidHashTableCapacity
+	case exceededHashTableCapacity
+	case elementNotFound
 }

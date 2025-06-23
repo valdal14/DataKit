@@ -124,6 +124,25 @@ struct DataKitQueueTests {
 		#expect(updatedElements.count == 3)
 	}
 	
+	@Test("getRear throws when the structure is empty")
+	func getRear_throw() async throws {
+		let sut = makeSUT()
+		await #expect(throws: DataKitError.emptyStructure, performing: ({
+			try await sut.getRear()
+		}))
+	}
+	
+	@Test("getRear returns the last element in the queue")
+	func getRear() async throws {
+		let sut = makeSUT()
+		await sut.enqueue(1)
+		await sut.enqueue(2)
+		await sut.enqueue(3)
+		
+		let readNode = try await sut.getRear()
+		#expect(readNode == 3)
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> DataKitQueue<Int> {
 		return .init()

@@ -222,6 +222,82 @@ struct DataKitLinkedListTests {
 		#expect(elements.count == 1)
 	}
 	
+	@Test("getTail throws when the tail node is nil")
+	func getTail_throws() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		await #expect(throws: DataKitError.emptyStructure, performing: ({
+			try await ll.getTail()
+		}))
+	}
+	
+	@Test("getTail returns the head as a tail node when the list only has 1 element")
+	func getTail() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 14)
+		await ll.add(newHead)
+		
+		let tail = try await ll.getTail()
+		#expect(tail.keyName == "Head")
+		#expect(tail.value == 14)
+	}
+	
+	@Test("getTail returns the tail node from the list")
+	func getTail_returns_tail_node() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 14)
+		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
+		await ll.add(newHead)
+		await ll.add(newNode0)
+		
+		let tail = try await ll.getTail()
+		#expect(tail.keyName == "Key0")
+		#expect(tail.value == 13)
+	}
+	
+	@Test("getTail returns the tail node correctly during deleting operations")
+	func getTail_returns_tail_node_after_node_deletion() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
+		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
+		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 11)
+		let newNode2: MyCustomType = MyCustomType.makeItem("Key2", 14)
+		await ll.add(newHead)
+		await ll.add(newNode0)
+		await ll.add(newNode1)
+		await ll.add(newNode2)
+		
+		var tail = try await ll.getTail()
+		#expect(tail.keyName == "Key2")
+		#expect(tail.value == 14)
+		// deleting the current tail
+		try await ll.delete(newNode2)
+		// assert the new tail
+		tail = try await ll.getTail()
+		#expect(tail.keyName == "Key1")
+		#expect(tail.value == 11)
+	}
+	
+	@Test("getHead throws when the head node is nil")
+	func getHead_throws() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		await #expect(throws: DataKitError.emptyStructure, performing: ({
+			try await ll.getHead()
+		}))
+	}
+	
+	@Test("getHead returns the head node from the list")
+	func getHead() async throws {
+		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let newHead: MyCustomType = MyCustomType.makeItem("Head", 14)
+		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
+		await ll.add(newHead)
+		await ll.add(newNode0)
+		
+		let tail = try await ll.getHead()
+		#expect(tail.keyName == "Head")
+		#expect(tail.value == 14)
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT() -> DataKitActorLinkedList<MyCustomType> {
 		return .init()

@@ -10,10 +10,6 @@ DataKit is a lightweight Swift **framework** designed to provide reusable and ef
 * [🚀 Implemented Data Structures](#-implemented-data-structures)
 * [📥 Installation](#-installation)
 * [📚 Usage](#-usage)
-    * [DataKitLinkedList](#datakitlinkedlist)
-    * [DataKitStack](#datakitstack)
-    * [DataKitQueue](#datakitqueue)
-    * [DataKitHashTable](#datakithashtable)
 * [🤝 Contributing](#-contributing)
 * [📄 License](#-license)
 

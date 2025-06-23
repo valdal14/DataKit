@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test-macos:
+    runs-on: macos-14 # latest macOS GitHub runner with Xcode
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.4' # or whatever you use
+
+      - name: Build and run tests on macOS
+        run: |
+          xcodebuild -scheme DataKit -destination 'platform=macOS' clean test
+

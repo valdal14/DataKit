@@ -1,20 +1,25 @@
-name: CI-macOS
+name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
-  build-and-test:
-    runs-on: macos-14
+  build-and-test-macos:
+    runs-on: macos-15  # Updated to newer macOS version
 
     steps:
-    - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Select Xcode
-      run: sudo xcode-select -switch /Applications/Xcode_15.0.1.app
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: 'latest-stable'  # Use latest stable version
 
-    - name: Build and Test macos
-      run: xcodebuild clean build test -project DataKit/DataKit.xcodeproj -scheme "DataKitTests" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -sdk macosx -destination "platform=macOS" ONLY_ACTIVE_ARCH=YES
+      - name: Build and run tests on macOS
+        run: |
+          # Try the test scheme with explicit destination (like locally)
+          xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests -destination 'platform=macOS,arch=arm64,id=0000FE00-C648B17BC1592925' clean test

@@ -66,6 +66,7 @@ let package = Package(
         )
     ]
 )
+```
 
 ## 📚 Usage
 

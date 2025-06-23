@@ -16,48 +16,41 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Step to list available Xcode versions (for debugging)
+    # Debugging steps (keep them for now to confirm environment)
     - name: List installed Xcode versions
       run: ls -F /Applications/ | grep "Xcode"
-      continue-on-error: true # Allow the workflow to continue even if this fails
+      continue-on-error: true
 
-    # Step to check the currently selected Xcode version (for debugging)
     - name: Check current Xcode version
       run: xcode-select -p
       continue-on-error: true
 
-    # Explicitly select Xcode 15.4
     - name: Select Xcode 15.4
       run: sudo xcode-select -switch /Applications/Xcode_15.4.app
-      # Add a post-selection check to confirm it worked
+
     - name: Confirm Xcode version after selection
       run: xcode-select -p
 
+    # NEW DEBUGGING STEP: List contents of the repo root and the DataKit folder
+    - name: List repository contents
+      run: |
+        echo "Contents of GITHUB_WORKSPACE (repository root):"
+        ls -F "${GITHUB_WORKSPACE}"
+        echo "Contents of DataKit folder:"
+        ls -F "${GITHUB_WORKSPACE}/DataKit"
+      # This step helps us visually confirm if DataKit.xcodeproj is directly inside the DataKit folder
+
     - name: Run DataKit Swift Tests
       run: |
-        # IMPORTANT: When you use `-project DataKit/DataKit.xcodeproj`
-        # in the xcodebuild command, it expects to be run from the
-        # root of your repository (where the 'DataKit' folder is located).
-        # The previous error message indicates xcodebuild was trying to find
-        # 'DataKit.xcodeproj' inside '/Users/runner/work/DataKit/DataKit/DataKit',
-        # which means it thought it was in '/Users/runner/work/DataKit/DataKit'
-        # and you told it to look for 'DataKit/DataKit.xcodeproj'.
-        #
-        # Let's ensure the current directory is the repository root
-        # and then provide the full relative path to the project.
-        #
-        # /Users/runner/work/DataKit/ <--- This is the repository root after checkout
+        # Change directory into the 'DataKit' folder where your 'DataKit.xcodeproj' is located.
+        # This makes 'DataKit.xcodeproj' a direct reference for xcodebuild.
+        cd "${GITHUB_WORKSPACE}/DataKit"
 
-        # Ensure we are at the repository root before running xcodebuild
-        # The checkout action places the repo at GITHUB_WORKSPACE
-        # You can use GITHUB_WORKSPACE to ensure you're in the correct base directory.
-        echo "Current working directory: $(pwd)"
-        echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
-
-        # The correct command for your setup (project inside DataKit folder)
-        # when running from the repo root is:
+        # Now, run xcodebuild.
+        # Since we are already IN the 'DataKit' folder, we just refer to 'DataKit.xcodeproj' directly.
+        echo "Running xcodebuild from: $(pwd)"
         xcodebuild test \
           -scheme DataKitTests \
-          -project "${GITHUB_WORKSPACE}/DataKit/DataKit.xcodeproj" \
+          -project DataKit.xcodeproj \ # <--- CHANGED: Now just 'DataKit.xcodeproj'
           -destination 'platform=macOS,arch=arm64' \
           ONLY_ACTIVE_ARCH=NO

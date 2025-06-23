@@ -9,7 +9,7 @@ import Foundation
 
 /// An actor-based queue implementation using a linked list as the underlying data structure.
 public actor DataKitQueue<T: DataKitCompatible>: Sendable {
-	private let data: DataKitActorLinkedList<T> = DataKitActorLinkedList<T>()
+	private let data: DataKitLinkedList<T> = DataKitLinkedList<T>()
 	
 	/// Initialises an empty linked queue.
 	public init() {}

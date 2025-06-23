@@ -1,5 +1,5 @@
 //
-//  DataKitActorLinkedList.swift
+//  DataKitLinkedList.swift
 //  DataKit
 //
 //  Created by Valerio D'ALESSIO on 9/6/25.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// An actor-based LinkedList implementation.
-public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
+public actor DataKitLinkedList<T: DataKitCompatible>: Sendable {
 	private var head: Node<T>?
 	private var tail: Node<T>?
 	private var listSize: Int = 0
@@ -180,7 +180,7 @@ public actor DataKitActorLinkedList<T: DataKitCompatible>: Sendable {
 }
 
 // MARK: - Add support for Stack implementation
-public extension DataKitActorLinkedList {
+public extension DataKitLinkedList {
 	/// Pushes a value onto the top of the stack.
 	///
 	/// This method inserts a new element at the head of the linked list,
@@ -221,7 +221,7 @@ public extension DataKitActorLinkedList {
 }
 
 // MARK: - Add support for Queue implementation
-public extension DataKitActorLinkedList {
+public extension DataKitLinkedList {
 	
 	/// Adds an element to the end of the list, mimicking queue enqueue behavior.
 	///

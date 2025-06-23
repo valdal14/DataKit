@@ -10,9 +10,9 @@ import Testing
 
 struct DataKitLinkedListTests {
 	
-	@Test("add new element to the DataKitActorLinkedList")
+	@Test("add new element to the DataKitLinkedList")
 	func add() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newNode: MyCustomType = MyCustomType.makeItem("Key1", 14)
 		await ll.add(newNode)
 		let size = await ll.getSize()
@@ -21,14 +21,14 @@ struct DataKitLinkedListTests {
 	
 	@Test("dump return 'Empty List' when the list is empty")
 	func bump_empty() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let expectedString: String = "Empty List"
 		#expect(await ll.dump() == expectedString)
 	}
 	
 	@Test("dump return a string representation of the current list")
 	func dump() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 14)
 		let newNode2: MyCustomType = MyCustomType.makeItem("Key2", 28)
 		let newNode3: MyCustomType = MyCustomType.makeItem("Key3", 1)
@@ -43,7 +43,7 @@ struct DataKitLinkedListTests {
 	
 	@Test("delete throws an exception when trying to delete from an empty list")
 	func delete_throws() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newNode: MyCustomType = MyCustomType.makeItem("Key1", 14)
 		await #expect(throws: DataKitError.emptyStructure, performing: ({
 			try await ll.delete(newNode)
@@ -52,7 +52,7 @@ struct DataKitLinkedListTests {
 	
 	@Test("delete successfully remove the first node from the list with a given value")
 	func delete() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 14)
 		let newNode2: MyCustomType = MyCustomType.makeItem("Key1", 14)
 		await ll.add(newNode1)
@@ -64,7 +64,7 @@ struct DataKitLinkedListTests {
 	
 	@Test("getSize successfully returns the correct size of the list")
 	func getSize() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 1)
 		let newNode2: MyCustomType = MyCustomType.makeItem("Key1", 14)
 		await ll.add(newNode1)
@@ -88,13 +88,13 @@ struct DataKitLinkedListTests {
 	
 	@Test("isEmpty returns true if the list is empty")
 	func isEmpty() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		#expect(await ll.isEmpty())
 	}
 	
 	@Test("isEmpty returns false if the list is not empty")
 	func isEmpty_false() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Key1", 28)
 		await ll.add(newHead)
 		#expect(await ll.isEmpty() == false)
@@ -102,7 +102,7 @@ struct DataKitLinkedListTests {
 	
 	@Test("search returns nil when a node cannot be found")
 	func search_nil() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 28)
 		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 12)
 		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 2)
@@ -115,7 +115,7 @@ struct DataKitLinkedListTests {
 	
 	@Test("search successfully finds the first node and return a its value and index in the list")
 	func searchBy() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 28)
 		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 12)
 		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 2)
@@ -137,7 +137,7 @@ struct DataKitLinkedListTests {
 	
 	@Test("searchAllBy returns a list of values and index associated with the found nodes")
 	func searchAllBy() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 28)
 		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 12)
 		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 2)
@@ -155,7 +155,7 @@ struct DataKitLinkedListTests {
 	
 	@Test("updateBy throws when the list is empty")
 	func updateBy_Throws_On_Empty_List() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
 		await #expect(throws: DataKitError.emptyStructure, performing: ({
 			try await ll.update(newHead, with: .makeItem(newHead.keyName, 14))
@@ -164,7 +164,7 @@ struct DataKitLinkedListTests {
 	
 	@Test("update updates the head node with a new value")
 	func update_head() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
 		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
 		let newNode1: MyCustomType = MyCustomType.makeItem("Key0", 13)
@@ -182,7 +182,7 @@ struct DataKitLinkedListTests {
 	
 	@Test("update updates all node occurrences a new value")
 	func update_nodes() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
 		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
 		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 11)
@@ -203,7 +203,7 @@ struct DataKitLinkedListTests {
 	
 	@Test("update updates only the first occurrence of the node with a new value")
 	func update_node() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
 		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
 		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 11)
@@ -224,7 +224,7 @@ struct DataKitLinkedListTests {
 	
 	@Test("getTail throws when the tail node is nil")
 	func getTail_throws() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		await #expect(throws: DataKitError.emptyStructure, performing: ({
 			try await ll.getTail()
 		}))
@@ -232,7 +232,7 @@ struct DataKitLinkedListTests {
 	
 	@Test("getTail returns the head as a tail node when the list only has 1 element")
 	func getTail() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 14)
 		await ll.add(newHead)
 		
@@ -243,7 +243,7 @@ struct DataKitLinkedListTests {
 	
 	@Test("getTail returns the tail node from the list")
 	func getTail_returns_tail_node() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 14)
 		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
 		await ll.add(newHead)
@@ -256,7 +256,7 @@ struct DataKitLinkedListTests {
 	
 	@Test("getTail returns the tail node correctly during deleting operations")
 	func getTail_returns_tail_node_after_node_deletion() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
 		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
 		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 11)
@@ -279,7 +279,7 @@ struct DataKitLinkedListTests {
 	
 	@Test("getHead throws when the head node is nil")
 	func getHead_throws() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		await #expect(throws: DataKitError.emptyStructure, performing: ({
 			try await ll.getHead()
 		}))
@@ -287,7 +287,7 @@ struct DataKitLinkedListTests {
 	
 	@Test("getHead returns the head node from the list")
 	func getHead() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 14)
 		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
 		await ll.add(newHead)
@@ -299,7 +299,7 @@ struct DataKitLinkedListTests {
 	}
 	
 	// MARK: - Helpers
-	private func makeSUT() -> DataKitActorLinkedList<MyCustomType> {
+	private func makeSUT() -> DataKitLinkedList<MyCustomType> {
 		return .init()
 	}
 }
@@ -309,7 +309,7 @@ extension DataKitLinkedListTests {
 	
 	@Test("stack operations work correctly")
 	func stackOperations() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
 		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
 		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 32)
@@ -322,7 +322,7 @@ extension DataKitLinkedListTests {
 	
 	@Test("pop from an empty list throws an error")
 	func pop_Empty_List_Throws() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		await #expect(throws: DataKitError.emptyStructure, performing: ({
 			let _ = try await ll.pop()
 		}))
@@ -330,7 +330,7 @@ extension DataKitLinkedListTests {
 	
 	@Test("pop always returns the head of the list")
 	func pop() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
 		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
 		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 32)
@@ -350,7 +350,7 @@ extension DataKitLinkedListTests {
 	
 	@Test("peek throws if the list is empty")
 	func peek_Empty_List_Throws() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		await #expect(throws: DataKitError.emptyStructure, performing: ({
 			_ = try await ll.peek()
 		}))
@@ -358,7 +358,7 @@ extension DataKitLinkedListTests {
 	
 	@Test("peek returns the head element from the list")
 	func peek() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
 		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
 		let newNode1: MyCustomType = MyCustomType.makeItem("Key1", 32)
@@ -380,7 +380,7 @@ extension DataKitLinkedListTests {
 	
 	@Test("enqueue the element into the queue")
 	func enqueue() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
 		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
 		await ll.enqueue(newHead)
@@ -392,7 +392,7 @@ extension DataKitLinkedListTests {
 	
 	@Test("dequeue the element from the queue")
 	func dequeue() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		let newHead: MyCustomType = MyCustomType.makeItem("Head", 7)
 		let newNode0: MyCustomType = MyCustomType.makeItem("Key0", 13)
 		await ll.enqueue(newHead)
@@ -408,7 +408,7 @@ extension DataKitLinkedListTests {
 	
 	@Test("dequeue throws an error when the queue is empty")
 	func dequeue_Throws() async throws {
-		let ll: DataKitActorLinkedList<MyCustomType> = makeSUT()
+		let ll: DataKitLinkedList<MyCustomType> = makeSUT()
 		await #expect(throws: DataKitError.emptyStructure, performing: ({
 			try await ll.dequeue()
 		}))

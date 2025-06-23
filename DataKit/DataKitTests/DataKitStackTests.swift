@@ -132,7 +132,7 @@ struct DataKitStackTests {
 	}
 	
 	// MARK: - Helper methods
-	private func makeSUT() -> DataKitActorStack<User> {
+	private func makeSUT() -> DataKitStack<User> {
 		return .init()
 	}
 }

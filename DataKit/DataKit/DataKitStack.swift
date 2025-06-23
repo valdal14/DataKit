@@ -1,5 +1,5 @@
 //
-//  DataKitActorStack.swift
+//  DataKitStack.swift
 //  DataKit
 //
 //  Created by Valerio D'ALESSIO on 9/6/25.
@@ -8,8 +8,8 @@
 import Foundation
 
 /// An actor-based stack implementation using a linked list as the underlying data structure.
-public actor DataKitActorStack<T: DataKitCompatible>: Sendable {
-	private var data: DataKitActorLinkedList<T> = DataKitActorLinkedList<T>()
+public actor DataKitStack<T: DataKitCompatible>: Sendable {
+	private var data: DataKitLinkedList<T> = DataKitLinkedList<T>()
 
 	/// Initialises an empty stack.
 	public init() {}

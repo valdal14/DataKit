@@ -25,7 +25,7 @@ jobs:
       run: xcode-select -p
       continue-on-error: true
 
-    - name: Select Xcode 15.4
+    - name: Select Xcode 16.2
       run: sudo xcode-select -switch /Applications/Xcode_15.4.app
 
     - name: Confirm Xcode version after selection

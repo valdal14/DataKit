@@ -8,12 +8,6 @@
 import DataKit
 import Testing
 
-public protocol DataKitHashable: Equatable {
-	associatedtype T: DataKitCompatible
-	var key: Int { get set }
-	var value: T { get set }
-}
-
 public struct DataKitHashTableFactory: Sendable {
 	private static let minTableSize: Int = 2
 	private static let maxTableSize: Int = 126

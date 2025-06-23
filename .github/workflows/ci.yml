@@ -48,4 +48,5 @@ jobs:
           -scheme DataKitTests \
           -project DataKit.xcodeproj \
           -destination 'platform=macOS,arch=arm64' \
+          CODE_SIGNING_REQUIRED=NO \
           ONLY_ACTIVE_ARCH=NO

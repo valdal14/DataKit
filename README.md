@@ -77,7 +77,92 @@ You should now be able to `import DataKit` in your Swift files!
 
 ## 📚 Usage
 
-### TODO...
+```swift
+import DataKit
+import Observation
+import SwiftUI
+
+// MARK: - ContentViewModel
+final class ContentViewModel<T: DataKitCompatible> {
+	private let list: DataKitLinkedList<T>
+	
+	init(list: DataKitLinkedList<T>) {
+		self.list = list
+	}
+	
+	func addElement(_ element: T) async {
+		await list.add(element)
+	}
+	
+	func getList() async -> String {
+		await list.dump()
+	}
+	
+	/// Implements additional methods....
+}
+
+// MARK: - Fruit - Type that conforms to DataKitCompatible
+struct Fruit: DataKitCompatible, Identifiable {
+	let id: UUID
+	let name: String
+	let emojy: String
+}
+
+private extension Fruit {
+	static let mock: [Fruit] = [
+		.init(id: UUID(), name: "Apple", emojy: "🍎"),
+		.init(id: UUID(), name: "Banana", emojy: "🍌"),
+		.init(id: UUID(), name: "Orange", emojy: "🍊"),
+		.init(id: UUID(), name: "Pineapple", emojy: "🍍")
+		]
+}
+
+// MARK: - ContentView
+struct ContentView: View {
+	@State var viewModel: ContentViewModel<Fruit> = .init(list: DataKitLinkedList<Fruit>())
+	@State private var fruits: [Fruit] = Fruit.mock
+	@State private var currentList: String = ""
+	
+    var body: some View {
+		VStack {
+			List(fruits) { fruit in
+				HStack {
+					Text(fruit.emojy)
+					Text(fruit.name)
+					Spacer()
+					CTAButton(element: fruit, onTap: ({ selectedElement in
+						await viewModel.addElement(selectedElement)
+						currentList = await viewModel.getList()
+					}))
+				}
+				.frame(minHeight: 60)
+			}
+			.listStyle(.inset)
+			
+			Text(currentList)
+				.font(.caption)
+        }
+        .padding()
+    }
+}
+
+// MARK: - CTAButton View Helper
+struct CTAButton: View {
+	let element: Fruit
+	let onTap: (Fruit) async -> Void
+	var body: some View {
+		Button {
+			Task { await onTap(element) }
+		} label: {
+			Image(systemName: "plus.circle")
+		}
+	}
+}
+
+#Preview {
+    ContentView()
+}
+```
 
 ## 🤝 Contributing
 

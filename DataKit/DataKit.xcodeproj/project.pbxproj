@@ -23,7 +23,6 @@
 /* Begin PBXFileReference section */
 		01621A392DF423A900B40F25 /* DataKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DataKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		01621A412DF423A900B40F25 /* DataKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DataKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		01CBEFF42DF594970067D671 /* DataKitTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = DataKitTests.xctestplan; path = DataKitTests/DataKitTests.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -74,7 +73,6 @@
 		01621A2F2DF423A900B40F25 = {
 			isa = PBXGroup;
 			children = (
-				01CBEFF42DF594970067D671 /* DataKitTests.xctestplan */,
 				01621A3B2DF423A900B40F25 /* DataKit */,
 				01621A452DF423A900B40F25 /* DataKitTests */,
 				01621A3A2DF423A900B40F25 /* Products */,

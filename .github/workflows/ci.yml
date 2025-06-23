@@ -21,17 +21,12 @@ jobs:
 
       - name: Build and run tests on macOS
         run: |
-          # Get current available destinations
-          echo "=== Available destinations ==="
-          xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests -showdestinations
-          
-          # Extract the Mac destination ID dynamically
-          MAC_ID=$(xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests -showdestinations 2>/dev/null | grep "platform:macOS" | grep "My Mac" | grep -o 'id:[A-F0-9-]*' | head -1 | cut -d: -f2)
-          
-          if [ -z "$MAC_ID" ]; then
-            echo "Could not find Mac ID, trying without ID..."
-            xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests -destination 'platform=macOS' clean test
-          else
-            echo "Using Mac ID: $MAC_ID"
-            xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests -destination "platform=macOS,id=$MAC_ID" clean test
+          # Try multiple destination formats until one works
+          echo "Trying name=Any Mac..."
+          if ! xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests -destination 'name=Any Mac' clean test; then
+            echo "Failed with name=Any Mac, trying platform=macOS..."
+            if ! xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests -destination 'platform=macOS' clean test; then
+              echo "Failed with platform=macOS, trying without destination..."
+              xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKit clean test
+            fi
           fi

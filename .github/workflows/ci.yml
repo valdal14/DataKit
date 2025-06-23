@@ -21,4 +21,4 @@ jobs:
 
       - name: Build and run tests on macOS
         run: |
-          xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests -destination 'platform=macOS,arch=arm64' clean test
+          xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests clean test

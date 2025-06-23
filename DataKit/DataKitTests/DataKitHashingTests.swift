@@ -135,17 +135,17 @@ public actor DataKitHashTable<T: DataKitHashable>: Sendable {
 		}
 	}
 	
-	public func searchBy(_ key: Int) -> T? {
+	public func searchBy(_ key: Int) -> (Int, T)? {
 		let index = singleHashFunction(key)
 		if let element = elements[index] {
 			if element.key == key {
-				return element
+				return (index, element)
 			} else {
 				for i in 1..<hashTableSize {
 					let newIndex: Int = doubleHashFunction(key, at: i)
 					if let element = elements[newIndex] {
 						if element.key == key {
-							return element
+							return (newIndex, element)
 						} else {
 							return nil
 						}
@@ -157,6 +157,14 @@ public actor DataKitHashTable<T: DataKitHashable>: Sendable {
 			}
 		} else {
 			return nil
+		}
+	}
+	
+	public func update(key: Int, with element: T) throws {
+		if let foundElement = searchBy(key) {
+			elements[foundElement.0] = element
+		} else {
+			throw DataKitError.elementNotFound
 		}
 	}
 	
@@ -217,7 +225,7 @@ struct DataKitHashingTests {
 		try await sut.add(.init(key: 55, value: .init(brand: .porsche, year: 2021)))
 		
 		let expectedElement: HashedCar? = .init(key: 44, value: .init(brand: .lamborghini, year: 2022))
-		let currentElement: HashedCar? = await sut.searchBy(44)
+		let currentElement: HashedCar? = await sut.searchBy(44)?.1
 		#expect(currentElement == expectedElement)
 	}
 	
@@ -229,7 +237,7 @@ struct DataKitHashingTests {
 		try await sut.add(.init(key: 35, value: .init(brand: .porsche, year: 2021)))
 		
 		let expectedElement: HashedCar? = .init(key: 24, value: .init(brand: .lamborghini, year: 2022))
-		let currentElement: HashedCar? = await sut.searchBy(24)
+		let currentElement: HashedCar? = await sut.searchBy(24)?.1
 		#expect(currentElement == expectedElement)
 	}
 	
@@ -238,7 +246,20 @@ struct DataKitHashingTests {
 		let sut = try makeSUT(capacity: 2)
 		try await sut.add(.init(key: 88, value: .init(brand: .ferrari, year: 2025)))
 		let expectedElement: HashedCar? = nil
-		let currentElement: HashedCar? = await sut.searchBy(188)
+		let currentElement: HashedCar? = await sut.searchBy(188)?.1
+		#expect(currentElement == expectedElement)
+	}
+	
+	@Test("update successfully update the element by the given key")
+	func update() async throws {
+		let sut = try makeSUT(capacity: 2)
+		try await sut.add(.init(key: 88, value: .init(brand: .ferrari, year: 2025)))
+		try await sut.add(.init(key: 35, value: .init(brand: .porsche, year: 2021)))
+		
+		try await sut.update(key: 35, with: .init(key: 35, value: .init(brand: .lamborghini, year: 2014)))
+		
+		let expectedElement: HashedCar? = .init(key: 35, value: .init(brand: .lamborghini, year: 2014))
+		let currentElement: HashedCar? = await sut.searchBy(35)?.1
 		#expect(currentElement == expectedElement)
 	}
 	

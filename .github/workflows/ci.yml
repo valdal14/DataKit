@@ -18,24 +18,8 @@ jobs:
 
     - name: Run DataKit Swift Tests
       run: |
-        # Navigate into the DataKit folder where your .xcodeproj/.xcworkspace (or Package.swift) resides
-        # Based on your file structure (DataKit-Repository/DataKit), this is the correct path.
-        cd DataKit
-
-        # Use xcodebuild to run tests for the specified scheme on a macOS destination.
-        # This command assumes you have an Xcode project (.xcodeproj) or workspace (.xcworkspace)
-        # named 'DataKit.xcodeproj' or 'DataKit.xcworkspace' directly within the 'DataKit' folder.
-        # If your project/workspace file has a different name, please adjust `DataKit.xcodeproj` accordingly.
-        # If you are using Swift Package Manager exclusively (no .xcodeproj/.xcworkspace),
-        # you would use 'swift test' instead (see commented out section below).
         xcodebuild test \
           -scheme DataKitTests \
-          -project DataKit\DataKit.xcodeproj \ # OR -workspace DataKit.xcworkspace if you use a workspace
-          -destination 'platform=macOS,arch=x86_64' \ # Target Intel-based macOS architecture
-          -enableCodeCoverage YES \ # Optional: Enable code coverage reports
-          ONLY_ACTIVE_ARCH=NO # Important for CI to build all architectures
-
-        # --- OR if your DataKit project is a pure Swift Package (no .xcodeproj/.xcworkspace) ---
-        # run: |
-        #   cd DataKit
-        #   swift test --enable-code-coverage # Optional: Enable code coverage reports
+          -project DataKit\DataKit.xcodeproj
+          -destination 'platform=macOS,arch=arm64'
+          ONLY_ACTIVE_ARCH=NO

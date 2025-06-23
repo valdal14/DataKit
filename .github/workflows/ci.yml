@@ -16,7 +16,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Debugging steps
+    # Debugging steps (can remove these once everything is stable)
     - name: List installed Xcode versions
       run: ls -F /Applications/ | grep "Xcode"
       continue-on-error: true
@@ -25,13 +25,12 @@ jobs:
       run: xcode-select -p
       continue-on-error: true
 
-    - name: Select Xcode 16.2
+    - name: Select Xcode 16.2 # Updated to 16.2 based on your latest info
       run: sudo xcode-select -switch /Applications/Xcode_16.2.app
 
     - name: Confirm Xcode version after selection
       run: xcode-select -p
 
-    # NEW DEBUGGING STEP: List contents of the repo root and the DataKit folder
     - name: List repository contents
       run: |
         echo "Contents of GITHUB_WORKSPACE (repository root):"
@@ -49,7 +48,4 @@ jobs:
           -scheme DataKitTests \
           -project DataKit.xcodeproj \
           -destination 'platform=macOS,arch=arm64' \
-		  CODE_SIGN_IDENTITY="" \      
-          CODE_SIGNING_REQUIRED=NO \ 
-          CODE_SIGNING_ALLOWED=NO \
           ONLY_ACTIVE_ARCH=NO

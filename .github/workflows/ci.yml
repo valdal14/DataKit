@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-test-macos:
-    runs-on: macos-14
+    runs-on: macos-15  # Updated to newer macOS version
 
     steps:
       - name: Checkout code
@@ -17,10 +17,8 @@ jobs:
       - name: Set up Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '15.4'
+          xcode-version: 'latest-stable'  # Use latest stable version
 
       - name: Build and run tests on macOS
         run: |
           xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests -destination 'platform=macOS' clean test
-
-

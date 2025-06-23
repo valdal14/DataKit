@@ -16,7 +16,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Debugging steps (keep them for now to confirm environment)
+    # Debugging steps
     - name: List installed Xcode versions
       run: ls -F /Applications/ | grep "Xcode"
       continue-on-error: true

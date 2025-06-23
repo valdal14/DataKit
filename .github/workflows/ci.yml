@@ -21,4 +21,4 @@ jobs:
 
       - name: Build and run tests on macOS
         run: |
-          xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests clean test
+          xcodebuild clean build test -project DataKit/DataKit.xcodeproj -scheme "DataKitTests" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -sdk macosx -destination "platform=macOS" ONLY_ACTIVE_ARCH=YES

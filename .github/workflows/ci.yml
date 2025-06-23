@@ -19,15 +19,6 @@ jobs:
         with:
           xcode-version: 'latest-stable'  # Use latest stable version
 
-      - name: Debug Xcode setup
-        run: |
-          echo "Xcode version:"
-          xcodebuild -version
-          echo "Available schemes:"
-          xcodebuild -project DataKit/DataKit.xcodeproj -list
-          echo "Available destinations for DataKitTests:"
-          xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests -showdestinations
-
       - name: Build and run tests on macOS
         run: |
-          xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests -destination 'generic/platform=macOS' clean test
+          xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests -destination 'platform=macOS,arch=arm64' clean test

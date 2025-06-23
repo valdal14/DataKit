@@ -20,6 +20,6 @@ jobs:
       run: |
         xcodebuild test \
           -scheme DataKitTests \
-          -project DataKit\DataKit.xcodeproj
+          -project DataKit/DataKit.xcodeproj
           -destination 'platform=macOS,arch=arm64'
           ONLY_ACTIVE_ARCH=NO

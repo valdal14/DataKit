@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -26,7 +26,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		01621A492DF423A900B40F25 /* Exceptions for "DataKit" folder in "DataKit" target */ = {
+		01621A492DF423A900B40F25 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			publicHeaders = (
 				DataKit.h,
@@ -36,19 +36,8 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		01621A3B2DF423A900B40F25 /* DataKit */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				01621A492DF423A900B40F25 /* Exceptions for "DataKit" folder in "DataKit" target */,
-			);
-			path = DataKit;
-			sourceTree = "<group>";
-		};
-		01621A452DF423A900B40F25 /* DataKitTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = DataKitTests;
-			sourceTree = "<group>";
-		};
+		01621A3B2DF423A900B40F25 /* DataKit */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (01621A492DF423A900B40F25 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = DataKit; sourceTree = "<group>"; };
+		01621A452DF423A900B40F25 /* DataKitTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = DataKitTests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +156,7 @@
 				};
 			};
 			buildConfigurationList = 01621A332DF423A900B40F25 /* Build configuration list for PBXProject "DataKit" */;
+			compatibilityVersion = "Xcode 15.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -175,7 +165,6 @@
 			);
 			mainGroup = 01621A2F2DF423A900B40F25;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
 			productRefGroup = 01621A3A2DF423A900B40F25 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";

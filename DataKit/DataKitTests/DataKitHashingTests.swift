@@ -168,6 +168,14 @@ public actor DataKitHashTable<T: DataKitHashable>: Sendable {
 		}
 	}
 	
+	public func delete(key: Int) throws {
+		if let foundElement = searchBy(key) {
+			elements[foundElement.0] = nil
+		} else {
+			throw DataKitError.elementNotFound
+		}
+	}
+	
 	public func getStoredKeys() -> [Int] {
 		var keys: [Int] = []
 		for element in elements {
@@ -268,6 +276,20 @@ struct DataKitHashingTests {
 		let sut = try makeSUT(capacity: 2)
 		try await sut.add(.init(key: 88, value: .init(brand: .ferrari, year: 2025)))
 		
+		await #expect(throws: DataKitError.elementNotFound, performing: ({
+			try await sut.update(key: 35, with: .init(key: 35, value: .init(brand: .lamborghini, year: 2014)))
+		}))
+	}
+	
+	@Test("delete successfully delete an element by a given key")
+	func delete() async throws {
+		let sut = try makeSUT(capacity: 2)
+		try await sut.add(.init(key: 88, value: .init(brand: .ferrari, year: 2025)))
+		try await sut.add(.init(key: 35, value: .init(brand: .porsche, year: 2021)))
+		
+		try await sut.delete(key: 35)
+		
+		// assert that the element is no longer present
 		await #expect(throws: DataKitError.elementNotFound, performing: ({
 			try await sut.update(key: 35, with: .init(key: 35, value: .init(brand: .lamborghini, year: 2014)))
 		}))

@@ -38,19 +38,15 @@ jobs:
         ls -F "${GITHUB_WORKSPACE}"
         echo "Contents of DataKit folder:"
         ls -F "${GITHUB_WORKSPACE}/DataKit"
-      # This step helps us visually confirm if DataKit.xcodeproj is directly inside the DataKit folder
 
     - name: Run DataKit Swift Tests
       run: |
         # Change directory into the 'DataKit' folder where your 'DataKit.xcodeproj' is located.
-        # This makes 'DataKit.xcodeproj' a direct reference for xcodebuild.
         cd "${GITHUB_WORKSPACE}/DataKit"
 
-        # Now, run xcodebuild.
-        # Since we are already IN the 'DataKit' folder, we just refer to 'DataKit.xcodeproj' directly.
         echo "Running xcodebuild from: $(pwd)"
         xcodebuild test \
           -scheme DataKitTests \
-          -project DataKit.xcodeproj \ # <--- CHANGED: Now just 'DataKit.xcodeproj'
+          -project DataKit.xcodeproj \
           -destination 'platform=macOS,arch=arm64' \
           ONLY_ACTIVE_ARCH=NO

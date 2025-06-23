@@ -48,7 +48,7 @@ First, clone the DataKit repository to your local machine:
 git clone [https://github.com/valdal14/DataKit.git](https://github.com/valdal14/DataKit.git)
 ```
 
-### Build the Framework
+### 2. Build the Framework
 
 Open the DataKit Xcode project and build the framework target:
 
@@ -58,7 +58,7 @@ Open the DataKit Xcode project and build the framework target:
 4.  Once the build is successful, navigate to the `Products` folder in the project navigator (it might be hidden; expand it if necessary).
 5.  Right-click on `DataKit.framework` and select `Show in Finder`. This will open the directory containing the built framework.
 
-### Add Framework to Your Project
+### 3. Add Framework to Your Project
 
 Now, add the `DataKit.framework` file to your application or framework target:
 

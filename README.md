@@ -41,7 +41,7 @@ To integrate DataKit into your Xcode project as a framework, follow these steps:
 First, clone the DataKit repository to your local machine:
 
 ```bash
-git clone [https://github.com/valdal14/DataKit.git](https://github.com/valdal14/DataKit.git)
+git clone https://github.com/valdal14/DataKit.git
 ```
 
 ### 2. Build the Framework

@@ -3,61 +3,39 @@ name: Run DataKit macOS Tests
 on:
   push:
     branches:
-      - main # Or your default branch, e.g., master, develop
+      - main # Or your default branch, e.g., master, develop, if different
   pull_request:
     branches:
-      - main # Or your default branch
+      - main # Or your default branch, if different
 
 jobs:
   test-macos:
-    runs-on: macos-latest # Use the latest macOS runner
+    runs-on: macos-latest # Use the latest macOS runner for your tests
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4 # Action to checkout your repository code
 
-    - name: Navigate to DataKit folder
-      # Assuming your DataKit code is directly inside the 'DataKit' folder
-      # If your project file (e.g., .xcodeproj or Package.swift) is not directly in DataKit,
-      # you might need to adjust this path or the xcodebuild command.
-      run: cd DataKit
-
-    - name: Install dependencies (if any)
-      # Uncomment and modify if your project has dependencies managed by e.g., CocoaPods, Carthage, or Swift Package Manager
-      # - name: Install CocoaPods
-      #   run: gem install cocoapods
-      # - name: Pod Install
-      #   run: pod install --project-directory=DataKit
-      # - name: Build Swift Packages
-      #   run: swift build # If you're using Swift Package Manager directly for dependencies
-
-    - name: Run Tests
-      # This command assumes a standard Xcode project or workspace.
-      # You might need to adjust the scheme, workspace, or project name.
-      # Replace 'DataKit' with your actual scheme name if it's different.
-      # Replace 'DataKit.xcodeproj' or 'DataKit.xcworkspace' with your actual project/workspace file.
-      # If using Swift Package Manager, use 'swift test' instead.
+    - name: Run DataKit Swift Tests
       run: |
-        cd DataKit # Ensure you are in the DataKit directory where the project/package is
+        # Navigate into the DataKit folder where your .xcodeproj/.xcworkspace (or Package.swift) resides
+        # Based on your file structure (DataKit-Repository/DataKit), this is the correct path.
+        cd DataKit
+
+        # Use xcodebuild to run tests for the specified scheme on a macOS destination.
+        # This command assumes you have an Xcode project (.xcodeproj) or workspace (.xcworkspace)
+        # named 'DataKit.xcodeproj' or 'DataKit.xcworkspace' directly within the 'DataKit' folder.
+        # If your project/workspace file has a different name, please adjust `DataKit.xcodeproj` accordingly.
+        # If you are using Swift Package Manager exclusively (no .xcodeproj/.xcworkspace),
+        # you would use 'swift test' instead (see commented out section below).
         xcodebuild test \
           -scheme DataKitTests \
-          -project DataKit/DataKit.xcodeproj \ # Or -workspace DataKit.xcworkspace if you have one
-          -destination 'platform=macOS,arch=x86_64' # Or 'platform=macOS,arch=arm64' for Apple Silicon runners
-          -enableCodeCoverage YES # Optional: if you want code coverage reports
-          ONLY_ACTIVE_ARCH=NO
-      # OR if you are using Swift Package Manager
-      # run: |
-      #   cd DataKit
-      #   swift test --enable-code-coverage # Optional: if you want code coverage reports
+          -project DataKit\DataKit.xcodeproj \ # OR -workspace DataKit.xcworkspace if you use a workspace
+          -destination 'platform=macOS,arch=x86_64' \ # Target Intel-based macOS architecture
+          -enableCodeCoverage YES \ # Optional: Enable code coverage reports
+          ONLY_ACTIVE_ARCH=NO # Important for CI to build all architectures
 
-    # Optional: If you want to upload test results or coverage reports
-    # - name: Upload Test Results
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: test-results
-    #     path: path/to/your/test_results.xml # Adjust path to your test results
-    # - name: Upload Code Coverage Report
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: code-coverage
-    #     path: path/to/your/code_coverage_report # Adjust path to your code coverage report
+        # --- OR if your DataKit project is a pure Swift Package (no .xcodeproj/.xcworkspace) ---
+        # run: |
+        #   cd DataKit
+        #   swift test --enable-code-coverage # Optional: Enable code coverage reports

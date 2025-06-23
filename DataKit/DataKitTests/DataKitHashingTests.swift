@@ -295,6 +295,14 @@ struct DataKitHashingTests {
 		}))
 	}
 	
+	@Test("delete throws when the key is not found")
+	func delete_throws() async throws {
+		let sut = try makeSUT(capacity: 2)
+		await #expect(throws: DataKitError.elementNotFound, performing: ({
+			try await sut.delete(key: 35)
+		}))
+	}
+	
 	// MARK: - Helpers
 	private func makeSUT(capacity: Int = 7) throws -> DataKitHashTable<HashedCar> {
 		try DataKitHashTableFactory.make(tableSize: capacity)

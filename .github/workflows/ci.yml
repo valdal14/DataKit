@@ -1,32 +1,63 @@
-name: CI
+name: Run DataKit macOS Tests
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main # Or your default branch, e.g., master, develop
   pull_request:
-    branches: [ main ]
+    branches:
+      - main # Or your default branch
 
 jobs:
-  build-and-test-macos:
-    runs-on: macos-15  # Updated to newer macOS version
+  test-macos:
+    runs-on: macos-latest # Use the latest macOS runner
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Set up Xcode
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: 'latest-stable'  # Use latest stable version
+    - name: Navigate to DataKit folder
+      # Assuming your DataKit code is directly inside the 'DataKit' folder
+      # If your project file (e.g., .xcodeproj or Package.swift) is not directly in DataKit,
+      # you might need to adjust this path or the xcodebuild command.
+      run: cd DataKit
 
-      - name: Build and run tests on macOS
-        run: |
-          # Try multiple destination formats until one works
-          echo "Trying name=Any Mac..."
-          if ! xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests -destination 'name=Any Mac' clean test; then
-            echo "Failed with name=Any Mac, trying platform=macOS..."
-            if ! xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKitTests -destination 'platform=macOS' clean test; then
-              echo "Failed with platform=macOS, trying without destination..."
-              xcodebuild -project DataKit/DataKit.xcodeproj -scheme DataKit clean test
-            fi
-          fi
+    - name: Install dependencies (if any)
+      # Uncomment and modify if your project has dependencies managed by e.g., CocoaPods, Carthage, or Swift Package Manager
+      # - name: Install CocoaPods
+      #   run: gem install cocoapods
+      # - name: Pod Install
+      #   run: pod install --project-directory=DataKit
+      # - name: Build Swift Packages
+      #   run: swift build # If you're using Swift Package Manager directly for dependencies
+
+    - name: Run Tests
+      # This command assumes a standard Xcode project or workspace.
+      # You might need to adjust the scheme, workspace, or project name.
+      # Replace 'DataKit' with your actual scheme name if it's different.
+      # Replace 'DataKit.xcodeproj' or 'DataKit.xcworkspace' with your actual project/workspace file.
+      # If using Swift Package Manager, use 'swift test' instead.
+      run: |
+        cd DataKit # Ensure you are in the DataKit directory where the project/package is
+        xcodebuild test \
+          -scheme DataKitTests \
+          -project DataKit/DataKit.xcodeproj \ # Or -workspace DataKit.xcworkspace if you have one
+          -destination 'platform=macOS,arch=x86_64' # Or 'platform=macOS,arch=arm64' for Apple Silicon runners
+          -enableCodeCoverage YES # Optional: if you want code coverage reports
+          ONLY_ACTIVE_ARCH=NO
+      # OR if you are using Swift Package Manager
+      # run: |
+      #   cd DataKit
+      #   swift test --enable-code-coverage # Optional: if you want code coverage reports
+
+    # Optional: If you want to upload test results or coverage reports
+    # - name: Upload Test Results
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: test-results
+    #     path: path/to/your/test_results.xml # Adjust path to your test results
+    # - name: Upload Code Coverage Report
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: code-coverage
+    #     path: path/to/your/code_coverage_report # Adjust path to your code coverage report
